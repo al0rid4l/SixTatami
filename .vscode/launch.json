@@ -1,0 +1,28 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": ".NET Core Launch (console)",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build",
+			// If you have changed target frameworks, make sure to update the program path.
+			"program": "${workspaceFolder}/src/RestFetch/bin/Debug/net8.0/RestFetch.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}",
+			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+			"console": "internalConsole",
+			"stopAtEntry": false,
+			"justMyCode": false,
+			"suppressJITOptimizations": true,
+			"env": {
+				"HTTP_PROXY": "http://127.0.0.1:2333",
+				"HTTPS_PROXY": "http://127.0.0.1:2333",
+				"ALL_PROXY": "http://127.0.0.1:2333",
+			}
+		}
+	]
+}
