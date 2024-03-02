@@ -55,43 +55,43 @@ jobs:
               - 'src/Extensions/**'
 
       - name: Build Utilities
-        if: steps.changes.outputs.changes.Utilities == 'true'
+        if: steps.changes.outputs.Utilities == 'true'
         run: ./release.sh -z 1 -c src/Utilities/Utilities.csproj
 
       - name: Pack Utilities
-        if: steps.changes.outputs.changes.Utilities == 'true'
+        if: steps.changes.outputs.Utilities == 'true'
         run: dotnet pack src/Utilities/Utilities.csproj --include-symbols -c Release
 
       - name: Publish Utilities
-        if: steps.changes.outputs.changes.Utilities == 'true'
+        if: steps.changes.outputs.Utilities == 'true'
         run: dotnet nuget push */bin/Release/*.{nupkg,snupkg} -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
 
       - name: Build Datastructures
-        if: steps.changes.outputs.changes.Utilities == 'true'
+        if: steps.changes.outputs.Datastructures == 'true'
         run: ./release.sh -z 1 -c src/Datastructures/Datastructures.csproj
 
       - name: Pack Datastructures
-        if: steps.changes.outputs.changes.Utilities == 'true'
+        if: steps.changes.outputs.Datastructures == 'true'
         run: dotnet pack src/Datastructures/Datastructures.csproj --include-symbols -c Release
 
       - name: Publish Datastructures
-        if: steps.changes.outputs.changes.Datastructures == 'true'
+        if: steps.changes.outputs.Datastructures == 'true'
         run: dotnet nuget push */bin/Release/*.{nupkg,snupkg} -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
 
       - name: Build Extensions
-        if: steps.changes.outputs.changes.Utilities == 'true'
+        if: steps.changes.outputs.Extensions == 'true'
         run: ./release.sh -z 1 -c src/Extensions/Extensions.csproj
 
       - name: Pack Extensions
-        if: steps.changes.outputs.changes.Utilities == 'true'
+        if: steps.changes.outputs.Extensions == 'true'
         run: dotnet pack src/Extensions/Extensions.csproj --include-symbols -c Release
 
       - name: Publish Extensions
-        if: steps.changes.outputs.changes.Extensions == 'true'
+        if: steps.changes.outputs.Extensions == 'true'
         run: dotnet nuget push */bin/Release/*.{nupkg,snupkg} -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
