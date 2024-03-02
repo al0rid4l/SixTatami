@@ -21,6 +21,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
+          # fix windows cache missing TODO
+          enableCrossOsArchive: true
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/paket.lock') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
@@ -67,7 +69,7 @@ jobs:
       - name: Publish Utilities
         if: steps.changes.outputs.Utilities == 'true'
         shell: pwsh
-        run: Get-Item src/Utilities/bin/Release/*.nupkg | % { dotnet nuget push $_.FullName -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json }
+        run: dotnet nuget push src/Utilities/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
 
@@ -84,7 +86,7 @@ jobs:
       - name: Publish Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
         shell: pwsh
-        run: Get-Item src/Datastructures/bin/Release/*.nupkg | % { dotnet nuget push $_.FullName -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json }
+        run: dotnet nuget push src/Datastructures/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
 
@@ -101,6 +103,6 @@ jobs:
       - name: Publish Extensions
         if: steps.changes.outputs.Extensions == 'true'
         shell: pwsh
-        run: Get-Item src/Extensions/bin/Release/*.nupkg | % { dotnet nuget push $_.FullName -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json }
+        run: dotnet nuget push src/Extensions/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
