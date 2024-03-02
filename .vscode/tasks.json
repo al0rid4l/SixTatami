@@ -7,11 +7,31 @@
 			"type": "process",
 			"args": [
 				"build",
-				"${workspaceFolder}/src/Extensions/Extensions.csproj",
+				"${workspaceFolder}/src/SixTatami.Extensions/SixTatami.Extensions.csproj",
 				"-c",
 				"Debug",
-				"-p:Arch=x64",
-				"-p:RID=win-x64"
+			],
+			"problemMatcher": "$msCompile"
+		}, {
+			"label": "build:DataStructures",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/src/SixTatami.DataStructures/SixTatami.DataStructures.csproj",
+				"-c",
+				"Debug",
+			],
+			"problemMatcher": "$msCompile"
+		}, {
+			"label": "build:Utilities",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/src/SixTatami.Utilities/SixTatami.Utilities.csproj",
+				"-c",
+				"Debug",
 			],
 			"problemMatcher": "$msCompile"
 		},

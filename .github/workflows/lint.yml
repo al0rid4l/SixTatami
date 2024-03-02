@@ -1,0 +1,45 @@
+name: Lint
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CI: true
+        
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/paket.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+            
+      - name: Install .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+          # 如果直接用nuget+lock文件则可以使用以下配置而不用cache action
+          # cache: true
+
+      - name: Install Paket
+        run: dotnet tool install -g paket
+
+      - name: Install Dependencies
+        run: paket install
+        # 如果使用nuget+lock则使用以下命令
+        # run: dotnet restore --locked-mode
+
+      # - name: Run lint
+      #   run: TODO

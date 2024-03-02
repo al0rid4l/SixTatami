@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+	"enabledManagers": ["nuget"],
+	"assignees": ["al0rid4l"],
+	"reviewers": ["al0rid4l"],
+	"timezone": "Asia/Hong_Kong",
+	"schedule": ["every weekend"],
+	"updateInternalDeps": true,
+	"labels": ["dependencies"]
+}

@@ -4,3 +4,7 @@ logs
 
 bin
 obj
+
+.vs
+
+BenchmarkDotNet.Artifacts

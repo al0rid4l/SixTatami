@@ -5,23 +5,169 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": ".NET Core Launch (console)",
+			"name": "Debug:Extensions",
 			"type": "coreclr",
 			"request": "launch",
-			"preLaunchTask": "build",
+			"preLaunchTask": "build:Extensions",
 			// If you have changed target frameworks, make sure to update the program path.
-			"program": "${workspaceFolder}/src/RestFetch/bin/Debug/net8.0/RestFetch.dll",
+			"program": "${workspaceFolder}/src/Extensions/bin/Debug/net8.0/Extensions.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}",
 			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
 			"console": "internalConsole",
 			"stopAtEntry": false,
 			"justMyCode": false,
+			// 抑制JIT优化
 			"suppressJITOptimizations": true,
+			// 默认调试器要求pdb和源代码完全对应,这个禁用此要求,放宽条件允许不完全对应的源码作为映射
+			"requireExactSource": false,
+			// 符号搜索路径配置
+			"symbolOptions": {
+				// 可以是本地目录或web地址,指定除ms和nuget之外的符号搜索位置
+				"searchPaths": [],
+				"searchMicrosoftSymbolServer": true,
+				"searchNuGetOrgSymbolServer": true,
+				// 符号缓存目录,默认%TEMP%\\SymbolCache,Linux则是~/.dotnet/symbolcache
+				// "cachePath": ""
+			},
+			// sourcelink配置
+			"sourceLinkOptions": {
+				"*": {
+					"enabled": true
+				}
+			},
+			// 是否允许跳过运算符重载和getter/setter
+			// "enableStepFiltering": false,
+			// 用于远程调试
+			// "pipeTransport": {
+			// 	"pipeCwd": "${workspaceFolder}",
+			// 	"pipeProgram": "enter the fully qualified path for the pipe program name, for example '/usr/bin/ssh'",
+			// 	"pipeArgs": [],
+			// 	"debuggerPath": "enter the path for the debugger on the target machine, for example ~/vsdbg/vsdbg"
+			// },
+			// pdb映射符号文件
+			// "sourceFileMap": {
+			// 	"searchcs": "realcs"
+			// },
+			// for ASP
+			// "serverReadyAction": {
+			// 	"action": "openExternally",
+			// 	"pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+			// },
 			"env": {
-				"HTTP_PROXY": "http://127.0.0.1:2333",
-				"HTTPS_PROXY": "http://127.0.0.1:2333",
-				"ALL_PROXY": "http://127.0.0.1:2333",
+				"HTTP_PROXY": "http://127.0.0.1:2080",
+				"HTTPS_PROXY": "http://127.0.0.1:2080",
+				"ALL_PROXY": "http://127.0.0.1:2080",
+			}
+		}, {
+			"name": "Debug:DataStructures",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build:DataStructures",
+			// If you have changed target frameworks, make sure to update the program path.
+			"program": "${workspaceFolder}/src/DataStructures/bin/Debug/net8.0/DataStructures.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}",
+			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+			"console": "internalConsole",
+			"stopAtEntry": false,
+			"justMyCode": false,
+			// 抑制JIT优化
+			"suppressJITOptimizations": true,
+			// 默认调试器要求pdb和源代码完全对应,这个禁用此要求,放宽条件允许不完全对应的源码作为映射
+			"requireExactSource": false,
+			// 符号搜索路径配置
+			"symbolOptions": {
+				// 可以是本地目录或web地址,指定除ms和nuget之外的符号搜索位置
+				"searchPaths": [],
+				"searchMicrosoftSymbolServer": true,
+				"searchNuGetOrgSymbolServer": true,
+				// 符号缓存目录,默认%TEMP%\\SymbolCache,Linux则是~/.dotnet/symbolcache
+				// "cachePath": ""
+			},
+			// sourcelink配置
+			"sourceLinkOptions": {
+				"*": {
+					"enabled": true
+				}
+			},
+			// 是否允许跳过运算符重载和getter/setter
+			// "enableStepFiltering": false,
+			// 用于远程调试
+			// "pipeTransport": {
+			// 	"pipeCwd": "${workspaceFolder}",
+			// 	"pipeProgram": "enter the fully qualified path for the pipe program name, for example '/usr/bin/ssh'",
+			// 	"pipeArgs": [],
+			// 	"debuggerPath": "enter the path for the debugger on the target machine, for example ~/vsdbg/vsdbg"
+			// },
+			// pdb映射符号文件
+			// "sourceFileMap": {
+			// 	"searchcs": "realcs"
+			// },
+			// for ASP
+			// "serverReadyAction": {
+			// 	"action": "openExternally",
+			// 	"pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+			// },
+			"env": {
+				"HTTP_PROXY": "http://127.0.0.1:2080",
+				"HTTPS_PROXY": "http://127.0.0.1:2080",
+				"ALL_PROXY": "http://127.0.0.1:2080",
+			}
+		}, {
+			"name": "Debug:DataStructures",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build:Utilities",
+			// If you have changed target frameworks, make sure to update the program path.
+			"program": "${workspaceFolder}/src/Utilities/bin/Debug/net8.0/Utilities.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}",
+			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+			"console": "internalConsole",
+			"stopAtEntry": false,
+			"justMyCode": false,
+			// 抑制JIT优化
+			"suppressJITOptimizations": true,
+			// 默认调试器要求pdb和源代码完全对应,这个禁用此要求,放宽条件允许不完全对应的源码作为映射
+			"requireExactSource": false,
+			// 符号搜索路径配置
+			"symbolOptions": {
+				// 可以是本地目录或web地址,指定除ms和nuget之外的符号搜索位置
+				"searchPaths": [],
+				"searchMicrosoftSymbolServer": true,
+				"searchNuGetOrgSymbolServer": true,
+				// 符号缓存目录,默认%TEMP%\\SymbolCache,Linux则是~/.dotnet/symbolcache
+				// "cachePath": ""
+			},
+			// sourcelink配置
+			"sourceLinkOptions": {
+				"*": {
+					"enabled": true
+				}
+			},
+			// 是否允许跳过运算符重载和getter/setter
+			// "enableStepFiltering": false,
+			// 用于远程调试
+			// "pipeTransport": {
+			// 	"pipeCwd": "${workspaceFolder}",
+			// 	"pipeProgram": "enter the fully qualified path for the pipe program name, for example '/usr/bin/ssh'",
+			// 	"pipeArgs": [],
+			// 	"debuggerPath": "enter the path for the debugger on the target machine, for example ~/vsdbg/vsdbg"
+			// },
+			// pdb映射符号文件
+			// "sourceFileMap": {
+			// 	"searchcs": "realcs"
+			// },
+			// for ASP
+			// "serverReadyAction": {
+			// 	"action": "openExternally",
+			// 	"pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+			// },
+			"env": {
+				"HTTP_PROXY": "http://127.0.0.1:2080",
+				"HTTPS_PROXY": "http://127.0.0.1:2080",
+				"ALL_PROXY": "http://127.0.0.1:2080",
 			}
 		}
 	]

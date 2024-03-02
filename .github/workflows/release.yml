@@ -1,0 +1,97 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CI: true
+        
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/paket.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+            
+      - name: Install .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+          # 如果直接用nuget+lock文件则可以使用以下配置而不用cache action
+          # cache: true
+
+      - name: Install Paket
+        run: dotnet tool install -g paket
+
+      - name: Install Dependencies
+        run: paket install
+        # 如果使用nuget+lock则使用以下命令
+        # run: dotnet restore --locked-mode
+
+      # - name: Run lint
+      #   run: TODO
+      - name: Filter Path
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            Utilities:
+              - 'src/Utilities/**'
+            Datastructures:
+              - 'src/Datastructures/**'
+            Extensions:
+              - 'src/Extensions/**'
+
+      - name: Build Utilities
+        if: steps.changes.outputs.changes.Utilities == 'true'
+        run: ./release.sh -z 1 -c src/Utilities/Utilities.csproj
+
+      - name: Pack Utilities
+        if: steps.changes.outputs.changes.Utilities == 'true'
+        run: dotnet pack src/Utilities/Utilities.csproj --include-symbols -c Release
+
+      - name: Publish Utilities
+        if: steps.changes.outputs.changes.Utilities == 'true'
+        run: dotnet nuget push */bin/Release/*.{nupkg,snupkg} -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
+
+      - name: Build Datastructures
+        if: steps.changes.outputs.changes.Utilities == 'true'
+        run: ./release.sh -z 1 -c src/Datastructures/Datastructures.csproj
+
+      - name: Pack Datastructures
+        if: steps.changes.outputs.changes.Utilities == 'true'
+        run: dotnet pack src/Datastructures/Datastructures.csproj --include-symbols -c Release
+
+      - name: Publish Datastructures
+        if: steps.changes.outputs.changes.Datastructures == 'true'
+        run: dotnet nuget push */bin/Release/*.{nupkg,snupkg} -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
+
+      - name: Build Extensions
+        if: steps.changes.outputs.changes.Utilities == 'true'
+        run: ./release.sh -z 1 -c src/Extensions/Extensions.csproj
+
+      - name: Pack Extensions
+        if: steps.changes.outputs.changes.Utilities == 'true'
+        run: dotnet pack src/Extensions/Extensions.csproj --include-symbols -c Release
+
+      - name: Publish Extensions
+        if: steps.changes.outputs.changes.Extensions == 'true'
+        run: dotnet nuget push */bin/Release/*.{nupkg,snupkg} -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
