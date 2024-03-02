@@ -67,7 +67,7 @@ jobs:
       - name: Publish Utilities
         if: steps.changes.outputs.Utilities == 'true'
         shell: pwsh
-        run: $pkg = Get-Item src/Utilities/bin/Release/*.nupkg; dotnet nuget push $pkg.FullName -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json
+        run: Get-Item src/Utilities/bin/Release/*.nupkg | % { dotnet nuget push $_.FullName -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json }
 
       - name: Build Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
@@ -82,7 +82,7 @@ jobs:
       - name: Publish Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
         shell: pwsh
-        run: $pkg = Get-Item src/Datastructures/bin/Release/*.nupkg; dotnet nuget push $pkg.FullName -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json
+        run: Get-Item src/Datastructures/bin/Release/*.nupkg | % { dotnet nuget push $_.FullName -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json }
 
       - name: Build Extensions
         if: steps.changes.outputs.Extensions == 'true'
@@ -97,4 +97,4 @@ jobs:
       - name: Publish Extensions
         if: steps.changes.outputs.Extensions == 'true'
         shell: pwsh
-        run: $pkg = Get-Item src/Extensions/bin/Release/*.nupkg; dotnet nuget push $pkg.FullName -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json
+        run: Get-Item src/Extensions/bin/Release/*.nupkg | % { dotnet nuget push $_.FullName -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json }
