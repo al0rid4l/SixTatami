@@ -11,7 +11,7 @@ env:
         
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -56,7 +56,7 @@ jobs:
 
       - name: Build Utilities
         if: steps.changes.outputs.Utilities == 'true'
-        run: ./release.sh -z 1 -c src/Utilities/Utilities.csproj
+        run: ./release.ps1 -z -c src/Utilities/Utilities.csproj
 
       - name: Pack Utilities
         if: steps.changes.outputs.Utilities == 'true'
@@ -64,13 +64,13 @@ jobs:
 
       - name: Publish Utilities
         if: steps.changes.outputs.Utilities == 'true'
-        run: dotnet nuget push */bin/Release/*.{nupkg,snupkg} -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push /bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
 
       - name: Build Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
-        run: ./release.sh -z 1 -c src/Datastructures/Datastructures.csproj
+        run: ./release.ps1 -z -c src/Datastructures/Datastructures.csproj
 
       - name: Pack Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
@@ -78,13 +78,13 @@ jobs:
 
       - name: Publish Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
-        run: dotnet nuget push */bin/Release/*.{nupkg,snupkg} -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
 
       - name: Build Extensions
         if: steps.changes.outputs.Extensions == 'true'
-        run: ./release.sh -z 1 -c src/Extensions/Extensions.csproj
+        run: ./release.ps1 -z -c src/Extensions/Extensions.csproj
 
       - name: Pack Extensions
         if: steps.changes.outputs.Extensions == 'true'
@@ -92,6 +92,6 @@ jobs:
 
       - name: Publish Extensions
         if: steps.changes.outputs.Extensions == 'true'
-        run: dotnet nuget push */bin/Release/*.{nupkg,snupkg} -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
