@@ -14,7 +14,7 @@
     <PackageProjectUrl>https://github.com/al0rid4l/SixTatami</PackageProjectUrl>
     <Description>Al0rid4l's Extensions</Description>
     <IncludeSymbols>true</IncludeSymbols>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <!-- <PackageLicenseFile>LICENSE</PackageLicenseFile> -->
     <!-- 启用包验证 -->
     <EnablePackageValidation>true</EnablePackageValidation>
     <!-- output target -->
