@@ -64,7 +64,7 @@ jobs:
 
       - name: Publish Utilities
         if: steps.changes.outputs.Utilities == 'true'
-        run: dotnet nuget push /bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push src/Utilities/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
 
@@ -78,7 +78,7 @@ jobs:
 
       - name: Publish Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
-        run: dotnet nuget push ./bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push src/Datastructures/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
 
@@ -92,6 +92,6 @@ jobs:
 
       - name: Publish Extensions
         if: steps.changes.outputs.Extensions == 'true'
-        run: dotnet nuget push ./bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push src/Extensions/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
