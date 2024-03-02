@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- 包信息 -->
 		<PackageId>SixTatami.Utilities</PackageId>
-		<PackageVersion>0.1.20</PackageVersion>
+		<PackageVersion>0.1.21</PackageVersion>
 		<!-- <PackageIcon>TODO</PackageIcon> -->
 		<PackageTags>Utilities;RandomString</PackageTags>
 		<Title>SixTatami.Utilities</Title>
