@@ -50,11 +50,11 @@ jobs:
         with:
           filters: |
             Utilities:
-              - 'src/Utilities/**'
+              - 'src/Utilities/**/*'
             Datastructures:
-              - 'src/Datastructures/**'
+              - 'src/Datastructures/**/*'
             Extensions:
-              - 'src/Extensions/**'
+              - 'src/Extensions/**/*'
 
       - name: Build Utilities
         if: steps.changes.outputs.Utilities == 'true'
