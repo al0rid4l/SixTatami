@@ -56,42 +56,51 @@ jobs:
 
       - name: Build Utilities
         if: steps.changes.outputs.Utilities == 'true'
+        shell: pwsh
         run: ./release.ps1 -z -c src/Utilities/Utilities.csproj
 
       - name: Pack Utilities
         if: steps.changes.outputs.Utilities == 'true'
+        shell: pwsh
         run: dotnet pack src/Utilities/Utilities.csproj --include-symbols -c Release
 
       - name: Publish Utilities
         if: steps.changes.outputs.Utilities == 'true'
+        shell: pwsh
         run: dotnet nuget push src/Utilities/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
 
       - name: Build Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
+        shell: pwsh
         run: ./release.ps1 -z -c src/Datastructures/Datastructures.csproj
 
       - name: Pack Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
+        shell: pwsh
         run: dotnet pack src/Datastructures/Datastructures.csproj --include-symbols -c Release
 
       - name: Publish Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
+        shell: pwsh
         run: dotnet nuget push src/Datastructures/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
 
       - name: Build Extensions
         if: steps.changes.outputs.Extensions == 'true'
+        shell: pwsh
         run: ./release.ps1 -z -c src/Extensions/Extensions.csproj
 
       - name: Pack Extensions
         if: steps.changes.outputs.Extensions == 'true'
+        shell: pwsh
         run: dotnet pack src/Extensions/Extensions.csproj --include-symbols -c Release
 
       - name: Publish Extensions
         if: steps.changes.outputs.Extensions == 'true'
+        shell: pwsh
         run: dotnet nuget push src/Extensions/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
