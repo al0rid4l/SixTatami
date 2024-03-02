@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<!-- 包信息 -->
 		<PackageId>SixTatami.Utilities</PackageId>
-		<PackageVersion>0.1.19</PackageVersion>
+		<PackageVersion>0.1.20</PackageVersion>
 		<!-- <PackageIcon>TODO</PackageIcon> -->
 		<PackageTags>Utilities;RandomString</PackageTags>
 		<Title>SixTatami.Utilities</Title>
@@ -13,7 +13,8 @@
 		<PackageProjectUrl>https://github.com/al0rid4l/SixTatami</PackageProjectUrl>
 		<Description>Al0rid4l's Utilities</Description>
 		<IncludeSymbols>true</IncludeSymbols>
-		<!-- <PackageLicenseFile>LICENSE</PackageLicenseFile> -->
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 
 		<!-- 启用包验证 -->
 		<EnablePackageValidation>true</EnablePackageValidation>
@@ -179,5 +180,8 @@
 	</ItemGroup> -->
 	<ItemGroup>
 		<ProjectReference Include="../Datastructures/Datastructures.csproj"></ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 </Project>
