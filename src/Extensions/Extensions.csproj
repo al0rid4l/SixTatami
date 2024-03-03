@@ -1,154 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- 通用配置 -->
-  <PropertyGroup>
-    <!-- 包信息 -->
-    <PackageId>SixTatami.Extensions</PackageId>
-    <PackageVersion>0.1.0</PackageVersion>
-    <!-- <PackageIcon>TODO</PackageIcon> -->
-    <PackageTags>Extensions</PackageTags>
-    <Title>SixTatami.Extensions</Title>
-    <Authors>al0rid4l</Authors>
-    <Company>com.al0rid4l</Company>
-    <RepositoryUrl>https://github.com/al0rid4l/SixTatami</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/al0rid4l/SixTatami</PackageProjectUrl>
-    <Description>Al0rid4l's Extensions</Description>
-    <IncludeSymbols>true</IncludeSymbols>
+	<!-- 通用配置 -->
+	<PropertyGroup>
+		<!-- 包信息 -->
+		<PackageId>SixTatami.Extensions</PackageId>
+		<PackageVersion>0.1.0</PackageVersion>
+		<!-- <PackageIcon>TODO</PackageIcon> -->
+		<PackageTags>Extensions</PackageTags>
+		<Title>SixTatami.Extensions</Title>
+		<Authors>al0rid4l</Authors>
+		<Company>com.al0rid4l</Company>
+		<RepositoryUrl>https://github.com/al0rid4l/SixTatami</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/al0rid4l/SixTatami</PackageProjectUrl>
+		<Description>Al0rid4l's Extensions</Description>
+		<IncludeSymbols>true</IncludeSymbols>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <!-- 启用包验证 -->
-    <EnablePackageValidation>true</EnablePackageValidation>
-    <!-- output target -->
-    <TargetFramework>net8.0</TargetFramework>
-    <!-- <TargetFrameworks>net8.0;netstandard2.1;</TargetFrameworks> -->
-    <OutputType>Library</OutputType>
-    <!-- 输出exe文件名 -->
-    <!-- <AssemblyName>$(Exefile)</AssemblyName> -->
-    <!-- 输出目录 -->
-    <!-- <OutputPath>Test\</OutputPath> -->
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+
+		<!-- 启用包验证 -->
+		<EnablePackageValidation>true</EnablePackageValidation>
+
+		<!-- output target -->
+		<TargetFramework>net8.0</TargetFramework>
+		<!-- <TargetFrameworks>net8.0;netstandard2.1;</TargetFrameworks> -->
+		<OutputType>Library</OutputType>
+		<!-- 输出exe文件名 -->
+	  <!-- <AssemblyName>$(Exefile)</AssemblyName> -->
+		<!-- 输出目录 -->
+	  <!-- <OutputPath>Test\</OutputPath> -->
+
     <!-- 预处理器符号定义 -->
     <DefineConstants Condition="$(RuntimeIdentifier.Contains('win'))">WINDOWS</DefineConstants>
     <DefineConstants Condition="$(RuntimeIdentifier.Contains('linux'))">$(DefineConstants);LINUX</DefineConstants>
-    <!-- 编译器选项 -->
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-    <!-- 是否开启预览特性 -->
-    <!-- <EnablePreviewFeatures>True</EnablePreviewFeatures> -->
-    <!-- 代码质量分析 -->
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <AnalysisMode>Recommended</AnalysisMode>
-    <!-- for source generator -->
-    <!-- <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> -->
+		<!-- 编译器选项 -->
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>latest</LangVersion>
+		<!-- 是否开启预览特性 -->
+		<!-- <EnablePreviewFeatures>True</EnablePreviewFeatures> -->
+		
+		<!-- 代码质量分析 -->
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisMode>Recommended</AnalysisMode>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <NoWarn>CA1051,CA1725,CA2211,CA1710,RCS1158,CA1000</NoWarn>
+		<!-- for source generator -->
+		<!-- <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> -->
+
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
     <TransformOutOfDateOnly>True</TransformOutOfDateOnly> -->
-  </PropertyGroup>
-  <!-- Debug配置 -->
-  <PropertyGroup Condition="'$(Configuration)'=='' Or '$(Configuration)'=='DEBUG' or '$(Configuration)'=='Debug'">
-    <!-- 编译器选项 -->
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <!-- 预处理器符号定义 -->
+	</PropertyGroup>
+
+	<!-- Debug配置 -->
+	<PropertyGroup Condition="'$(Configuration)'=='' Or '$(Configuration)'=='DEBUG' or '$(Configuration)'=='Debug'">
+
+		<!-- 编译器选项 -->
+		<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+		<!-- 预处理器符号定义 -->
     <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
-    <!-- 生成调试信息 -->
-    <!-- 调试符号 -->
-    <DebugSymbols>true</DebugSymbols>
-    <!-- 生成跨平台pdb -->
-    <DebugType>portable</DebugType>
-    <!-- pdb文件位置和名称 -->
-    <!-- <PdbFile>$(Exefile)</PdbFile> -->
-    <!-- 复制所有依赖项的pdb到构建产物目录 -->
-    <CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
-    <!-- 优化 -->
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <!-- Release配置 -->
-  <PropertyGroup Condition="'$(Configuration)'=='RELEASE' or '$(Configuration)'=='Release'">
-    <!-- output target -->
-    <PlatformTarget Condition="'$(Arch)'==''">anycpu</PlatformTarget>
-    <PlatformTarget Condition="'$(Arch)'=='x64'">x64</PlatformTarget>
-    <PlatformTarget Condition="'$(Arch)'=='x86'">x86</PlatformTarget>
-    <PlatformTarget Condition="'$(Arch)'=='arm'">ARM</PlatformTarget>
-    <PlatformTarget Condition="'$(Arch)'=='arm64'">ARM64</PlatformTarget>
-    <!-- RID -->
-		<RuntimeIdentifier>$(RID)</RuntimeIdentifier>
+
+		<!-- 生成调试信息 -->
+		<!-- 调试符号 -->
+		<DebugSymbols>true</DebugSymbols>
+		<!-- 生成跨平台pdb -->
+		<DebugType>portable</DebugType>
+		<!-- pdb文件位置和名称 -->
+		<!-- <PdbFile>$(Exefile)</PdbFile> -->
+		<!-- 复制所有依赖项的pdb到构建产物目录 -->
+		<CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
+		<!-- 优化 -->
+		<Optimize>false</Optimize>
+	</PropertyGroup>
+
+	<!-- Release配置 -->
+	<PropertyGroup Condition="'$(Configuration)'=='RELEASE' or '$(Configuration)'=='Release'">
+		<!-- output target -->
+		<PlatformTarget Condition="'$(Arch)'==''">anycpu</PlatformTarget>
+		<PlatformTarget Condition="'$(Arch)'=='x64'">x64</PlatformTarget>
+		<PlatformTarget Condition="'$(Arch)'=='x86'">x86</PlatformTarget>
+		<PlatformTarget Condition="'$(Arch)'=='arm'">ARM</PlatformTarget>
+		<PlatformTarget Condition="'$(Arch)'=='arm64'">ARM64</PlatformTarget>
+		<!-- RID -->
+		<!-- <RuntimeIdentifier>$(RID)</RuntimeIdentifier> -->
 		<!-- <RuntimeIdentifiers>win-x64;linux;linux-x64;linux-musl-x64;linux-arm;linux-arm64;linux-musl-arm64;osx-arm64</RuntimeIdentifiers> -->
-    <!-- 生成引用程序集 -->
-    <!-- <ProduceReferenceAssembly>true</ProduceReferenceAssembly> -->
-    <!-- <ProduceOnlyReferenceAssembly>true</ProduceOnlyReferenceAssembly> -->
-    <!-- 生成确定性输出 -->
-    <!-- Github Action中默认环境变量CI为true,也可以使用GITHUB_ACTIONS,也默认为true,不过CI更加可移植一些 -->
-    <Deterministic Condition="$(CI)=='true'">true</Deterministic>
-    <ContinuousIntegrationBuild Condition="$(CI)=='true'">true</ContinuousIntegrationBuild>
-    <!-- for SourceLink -->
-    <EmbedUntrackedSources Condition="$(CI)=='true'">true</EmbedUntrackedSources>
-    <!-- 编译器选项 -->
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <!-- 预处理器符号定义 -->
+		<!-- 生成引用程序集 -->
+		<!-- <ProduceReferenceAssembly>true</ProduceReferenceAssembly> -->
+		<!-- <ProduceOnlyReferenceAssembly>true</ProduceOnlyReferenceAssembly> -->
+		<!-- 生成确定性输出 -->
+		<!-- Github Action中默认环境变量CI为true,也可以使用GITHUB_ACTIONS,也默认为true,不过CI更加可移植一些 -->
+		<Deterministic Condition="$(CI)=='true'">true</Deterministic>
+		<ContinuousIntegrationBuild Condition="$(CI)=='true'">true</ContinuousIntegrationBuild>
+		<!-- for SourceLink -->
+		<EmbedUntrackedSources Condition="$(CI)=='true'">true</EmbedUntrackedSources>
+
+		<!-- 编译器选项 -->
+		<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+		<!-- 预处理器符号定义 -->
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-    <!-- 生成调试信息 -->
-    <!-- 调试符号 -->
-    <DebugSymbols>true</DebugSymbols>
-    <!-- 生成跨平台pdb -->
-    <DebugType>portable</DebugType>
-    <!-- pdb文件位置和名称 -->
-    <!-- <PdbFile>$(Exefile)</PdbFile> -->
-    <!-- 将pdb打包到发布内容和主包一起发布 -->
-    <!-- <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder> -->
-    <!-- 将pdb打包到发布内容作为符号包单独发布 -->
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <!-- 优化 -->
-    <Optimize>true</Optimize>
-    <!-- 单文件和selfcontained -->
-    <!-- <PublishSelfContained>true</PublishSelfContained>
+
+		<!-- 生成调试信息 -->
+		<!-- 调试符号 -->
+		<DebugSymbols>true</DebugSymbols>
+		<!-- 生成跨平台pdb -->
+		<DebugType>portable</DebugType>
+		<!-- pdb文件位置和名称 -->
+		<!-- <PdbFile>$(Exefile)</PdbFile> -->
+		<!-- 将pdb打包到发布内容和主包一起发布 -->
+		<!-- <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder> -->
+		<!-- 将pdb打包到发布内容作为符号包单独发布 -->
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<!-- 优化 -->
+		<Optimize>true</Optimize>
+
+		<!-- 单文件和selfcontained -->
+		<!-- <PublishSelfContained>true</PublishSelfContained>
 		<PublishSingleFile>true</PublishSingleFile> -->
-    <!-- R2R -->
-    <PublishReadyToRun>true</PublishReadyToRun>
-    <PublishReadyToRunComposite>true</PublishReadyToRunComposite>
-    <PublishReadyToRunEmitSymbols>true</PublishReadyToRunEmitSymbols>
-    <!-- AOT -->
-    <!-- <PublishAot>true</PublishAot>
+
+		<!-- R2R -->
+		<!-- <PublishReadyToRun>true</PublishReadyToRun>
+		<PublishReadyToRunComposite>true</PublishReadyToRunComposite>
+		<PublishReadyToRunEmitSymbols>true</PublishReadyToRunEmitSymbols> -->
+
+		<!-- AOT -->
+		<!-- <PublishAot>true</PublishAot>
 		<OptimizationPreference>speed</OptimizationPreference>
 		<EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
 		<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault> -->
-    <IsAotCompatible>true</IsAotCompatible>
-    <!-- JIT & PGO -->
-    <!-- <TieredPGO>true</TieredPGO>
+ 		<IsAotCompatible>true</IsAotCompatible>
+
+		<!-- JIT & PGO -->
+		<!-- <TieredPGO>true</TieredPGO>
 		<TieredCompilation>true</TieredCompilation>
 		<TieredCompilationQuickJit>true</TieredCompilationQuickJit>
 		<TieredCompilationQuickJitForLoops>true</TieredCompilationQuickJitForLoops> -->
-    <!-- trim -->
-    <!-- <PublishTrimmed>true</PublishTrimmed>
+
+		<!-- trim -->
+		<!-- <PublishTrimmed>true</PublishTrimmed>
 		<TrimMode>full</TrimMode>
 		<InvariantGlobalization>true</InvariantGlobalization>
 		<EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
 		<EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
 		<StartupHookSupport>true</StartupHookSupport>
 		<EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization>false</EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization> -->
-    <!-- symbols -->
-    <!-- <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
+		<!-- symbols -->
+		<!-- <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
 		<DebuggerSupport>false</DebuggerSupport> -->
-    <!-- 裁剪分析 -->
-    <!-- <EnableTrimAnalyzer>true</EnableTrimAnalyzer> -->
-    <IsTrimmable>true</IsTrimmable>
-    <!-- runtime -->
-    <!-- GC -->
-    <!-- <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+		<!-- 裁剪分析 -->
+		<!-- <EnableTrimAnalyzer>true</EnableTrimAnalyzer> -->
+		<IsTrimmable>true</IsTrimmable>
+
+		<!-- runtime -->
+		<!-- GC -->
+		<!-- <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
 		<ServerGarbageCollection>false</ServerGarbageCollection>
 		<RetainVMGarbageCollection>false</RetainVMGarbageCollection> -->
-    <!-- threads -->
-    <!-- <ThreadPoolMaxThreads>10</ThreadPoolMaxThreads>
+		<!-- threads -->
+		<!-- <ThreadPoolMaxThreads>10</ThreadPoolMaxThreads>
 		<ThreadPoolMinThreads>4</ThreadPoolMinThreads> -->
-  </PropertyGroup>
-  <Target Name="MSBuildLog">
-    <Message Text="$(Arch)" />
-    <Message Text="$(RID)" />
-    <Message Text="$(Configuration)" />
-  </Target>
-  <!-- T4模板 -->
-  <!-- <ItemGroup>
+	</PropertyGroup>
+
+	<Target Name="MSBuildLog">
+		<Message Text="$(Arch)" />
+		<Message Text="$(RID)" />
+		<Message Text="$(Configuration)" />
+	</Target>
+
+	<!-- T4模板 -->
+	<!-- <ItemGroup>
 		<T4Transform Include="file.tt" />
 		<Compile Update="file.cs">
 			<DesignTime>True</DesignTime>
@@ -156,8 +176,8 @@
 			<DependentUpon>file.tt</DependentUpon>
 		</Compile>
 	</ItemGroup> -->
-  <!-- for SourceLink. NET8+默认包含并启用 -->
-  <!-- <ItemGroup>
+	<!-- for SourceLink. NET8+默认包含并启用 -->
+	<!-- <ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
 	</ItemGroup> -->
 	<ItemGroup>

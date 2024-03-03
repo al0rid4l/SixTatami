@@ -22,7 +22,7 @@
 		<!-- output target -->
 		<TargetFramework>net8.0</TargetFramework>
 		<!-- <TargetFrameworks>net8.0;netstandard2.1;</TargetFrameworks> -->
-				<OutputType>Library</OutputType>
+		<OutputType>Library</OutputType>
 		<!-- 输出exe文件名 -->
 	  <!-- <AssemblyName>$(Exefile)</AssemblyName> -->
 		<!-- 输出目录 -->
@@ -42,9 +42,10 @@
 		<!-- 代码质量分析 -->
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<AnalysisMode>Recommended</AnalysisMode>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <NoWarn>CA1051,CA1725,CA2211,CA1710,RCS1158,CA1000</NoWarn>
 		<!-- for source generator -->
 		<!-- <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> -->
-    <NoWarn>CA1051,CA1725,CA2211,CA1710,RCS1158,CA1000</NoWarn>
 
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
@@ -81,7 +82,7 @@
 		<PlatformTarget Condition="'$(Arch)'=='arm'">ARM</PlatformTarget>
 		<PlatformTarget Condition="'$(Arch)'=='arm64'">ARM64</PlatformTarget>
 		<!-- RID -->
-		<RuntimeIdentifier>$(RID)</RuntimeIdentifier>
+		<!-- <RuntimeIdentifier>$(RID)</RuntimeIdentifier> -->
 		<!-- <RuntimeIdentifiers>win-x64;linux;linux-x64;linux-musl-x64;linux-arm;linux-arm64;linux-musl-arm64;osx-arm64</RuntimeIdentifiers> -->
 		<!-- 生成引用程序集 -->
 		<!-- <ProduceReferenceAssembly>true</ProduceReferenceAssembly> -->
@@ -117,9 +118,9 @@
 		<PublishSingleFile>true</PublishSingleFile> -->
 
 		<!-- R2R -->
-		<PublishReadyToRun>true</PublishReadyToRun>
+		<!-- <PublishReadyToRun>true</PublishReadyToRun>
 		<PublishReadyToRunComposite>true</PublishReadyToRunComposite>
-		<PublishReadyToRunEmitSymbols>true</PublishReadyToRunEmitSymbols>
+		<PublishReadyToRunEmitSymbols>true</PublishReadyToRunEmitSymbols> -->
 
 		<!-- AOT -->
 		<!-- <PublishAot>true</PublishAot>
@@ -178,7 +179,7 @@
 	<!-- <ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
 	</ItemGroup> -->
-	<ItemGroup>
+<ItemGroup>
 		<ProjectReference Include="../Datastructures/Datastructures.csproj"></ProjectReference>
 	</ItemGroup>
 	<ItemGroup>
