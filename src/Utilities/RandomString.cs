@@ -201,8 +201,8 @@ public static class RandomString {
 	public static string GenerateFastRandomLength(CharsetType charset = CharsetType.AlphabetLower, int minLength = 5, int maxLength = 10) => GenerateFastRandomLength(charset.Value(), minLength, maxLength);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string FastGenerateHexString(int length = 8, bool lowerCase = false) => lowerCase ? GenerateFast(CharsetType.HexLower, length) : GenerateFast(CharsetType.HexUpper, length);
+	public static string GenerateHexStringFast(int length = 8, bool lowerCase = false) => lowerCase ? GenerateFast(CharsetType.HexLower, length) : GenerateFast(CharsetType.HexUpper, length);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string GenerateSafeHexString(int length = 8, bool lowerCase = false) => RandomNumberGenerator.GetHexString(length, lowerCase);
+	public static string GenerateHexStringSafe(int length = 8, bool lowerCase = false) => RandomNumberGenerator.GetHexString(length, lowerCase);
 }
