@@ -7,7 +7,7 @@
 			"type": "process",
 			"args": [
 				"build",
-				"${workspaceFolder}/src/SixTatami.Extensions/SixTatami.Extensions.csproj",
+				"${workspaceFolder}/src/Extensions/Extensions.csproj",
 				"-c",
 				"Debug",
 			],
@@ -18,7 +18,7 @@
 			"type": "process",
 			"args": [
 				"build",
-				"${workspaceFolder}/src/SixTatami.DataStructures/SixTatami.DataStructures.csproj",
+				"${workspaceFolder}/src/DataStructures/DataStructures.csproj",
 				"-c",
 				"Debug",
 			],
@@ -29,7 +29,7 @@
 			"type": "process",
 			"args": [
 				"build",
-				"${workspaceFolder}/src/SixTatami.Utilities/SixTatami.Utilities.csproj",
+				"${workspaceFolder}/src/Utilities/Utilities.csproj",
 				"-c",
 				"Debug",
 			],

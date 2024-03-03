@@ -115,7 +115,7 @@
 				"ALL_PROXY": "http://127.0.0.1:2080",
 			}
 		}, {
-			"name": "Debug:DataStructures",
+			"name": "Debug:Utilities",
 			"type": "coreclr",
 			"request": "launch",
 			"preLaunchTask": "build:Utilities",

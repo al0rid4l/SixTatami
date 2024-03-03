@@ -139,22 +139,22 @@ public enum CharsetType: byte {
 public static class RandomString {
 	// safe
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string SafeGenerate(string charset, int length = 10) => RandomNumberGenerator.GetString(charset, length);
+	public static string GenerateSafe(string charset, int length = 10) => RandomNumberGenerator.GetString(charset, length);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string SafeGenerate(CharsetType charset = CharsetType.AlphabetLower, int length = 10) => SafeGenerate(charset.Value(), length);
+	public static string GenerateSafe(CharsetType charset = CharsetType.AlphabetLower, int length = 10) => GenerateSafe(charset.Value(), length);
 
-	public static string SafeGenerateRandomLength(string charset, int minLength = 5, int maxLength = 10) {
+	public static string GenerateSafeRandomLength(string charset, int minLength = 5, int maxLength = 10) {
 		if (minLength < 0 || maxLength < 0 || minLength > maxLength) {
 			throw new ArgumentException($"Invalid length, {nameof(minLength)}: {minLength}, {nameof(maxLength)}: {maxLength}, {nameof(minLength)} and {nameof(maxLength)} must be greater than 0, and {nameof(maxLength)} must be greater than {nameof(minLength)}.");
 		}
 
 		var rnd = new Random();
-		return SafeGenerate(charset, rnd.Next(minLength, maxLength));
+		return GenerateSafe(charset, rnd.Next(minLength, maxLength));
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string SafeGenerateRandomLength(CharsetType charset = CharsetType.AlphabetLower, int minLength = 5, int maxLength = 10) => SafeGenerateRandomLength(charset.Value(), minLength, maxLength);
+	public static string GenerateSafeRandomLength(CharsetType charset = CharsetType.AlphabetLower, int minLength = 5, int maxLength = 10) => GenerateSafeRandomLength(charset.Value(), minLength, maxLength);
 
 	// unsafe
 	// [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -169,9 +169,9 @@ public static class RandomString {
 	// }
 
 	// 此函数比上面非AOT略快, AOT略慢
-	private static string FastGenerate(string charset, int length, Random rnd) {
+	private static string GenerateFast(string charset, int length, Random rnd) {
 		char[] sb = ArrayPool<char>.Shared.Rent(length);
-		
+
 		for (var i = 0; i < length; ++i) {
 			sb[i] = charset[rnd.Next(charset.Length)];
 		}
@@ -181,12 +181,12 @@ public static class RandomString {
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string FastGenerate(string charset, int length = 10) => FastGenerate(charset, length, new());
+	public static string GenerateFast(string charset, int length = 10) => GenerateFast(charset, length, new());
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string FastGenerate(CharsetType charset = CharsetType.AlphabetLower, int length = 10) => FastGenerate(charset.Value(), length);
+	public static string GenerateFast(CharsetType charset = CharsetType.AlphabetLower, int length = 10) => GenerateFast(charset.Value(), length);
 
-	public static string FastGenerateRandomLength(string charset, int minLength = 5, int maxLength = 10) {
+	public static string GenerateFastRandomLength(string charset, int minLength = 5, int maxLength = 10) {
 		if (minLength > maxLength) {
 			throw new ArgumentException($"Invalid length, {nameof(minLength)}: {minLength}, {nameof(maxLength)}: {maxLength}, {nameof(minLength)} and {nameof(maxLength)} must be greater than 0, and {nameof(maxLength)} must be greater than {nameof(minLength)}.");
 		}
@@ -194,15 +194,15 @@ public static class RandomString {
 		var rnd = new Random();
 		var seed = rnd.NextSingle();
 		int length = (int)Math.Floor((maxLength - minLength) * seed) + minLength;
-		return FastGenerate(charset, length, rnd);
+		return GenerateFast(charset, length, rnd);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string FastGenerateRandomLength(CharsetType charset = CharsetType.AlphabetLower, int minLength = 5, int maxLength = 10) => FastGenerateRandomLength(charset.Value(), minLength, maxLength);
+	public static string GenerateFastRandomLength(CharsetType charset = CharsetType.AlphabetLower, int minLength = 5, int maxLength = 10) => GenerateFastRandomLength(charset.Value(), minLength, maxLength);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string FastGenerateHexString(int length = 8, bool lowerCase = false) => lowerCase ? FastGenerate(CharsetType.HexLower, length) : FastGenerate(CharsetType.HexUpper, length);
+	public static string FastGenerateHexString(int length = 8, bool lowerCase = false) => lowerCase ? GenerateFast(CharsetType.HexLower, length) : GenerateFast(CharsetType.HexUpper, length);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string SafeGenerateHexString(int length = 8, bool lowerCase = false) => RandomNumberGenerator.GetHexString(length, lowerCase);
+	public static string GenerateSafeHexString(int length = 8, bool lowerCase = false) => RandomNumberGenerator.GetHexString(length, lowerCase);
 }
