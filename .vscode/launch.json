@@ -24,9 +24,14 @@
 			// 符号搜索路径配置
 			"symbolOptions": {
 				// 可以是本地目录或web地址,指定除ms和nuget之外的符号搜索位置
-				"searchPaths": [],
-				"searchMicrosoftSymbolServer": true,
-				"searchNuGetOrgSymbolServer": true,
+				"searchPaths": [
+					"https://symbols.nuget.org/download/symbols",
+					"https://msdl.microsoft.com/download/symbols"
+				],
+				// 天知道为什么下面两个选项一开就无法调试,不过我们可以利用上面的配置绕过这个问题
+				// 但是哪天修复了记得改回来,TODO
+				// "searchMicrosoftSymbolServer": true,
+				// "searchNuGetOrgSymbolServer": true,
 				// 符号缓存目录,默认%TEMP%\\SymbolCache,Linux则是~/.dotnet/symbolcache
 				// "cachePath": ""
 			},
@@ -79,9 +84,14 @@
 			// 符号搜索路径配置
 			"symbolOptions": {
 				// 可以是本地目录或web地址,指定除ms和nuget之外的符号搜索位置
-				"searchPaths": [],
-				"searchMicrosoftSymbolServer": true,
-				"searchNuGetOrgSymbolServer": true,
+				"searchPaths": [
+					"https://symbols.nuget.org/download/symbols",
+					"https://msdl.microsoft.com/download/symbols"
+				],
+				// 天知道为什么下面两个选项一开就无法调试,不过我们可以利用上面的配置绕过这个问题
+				// 但是哪天修复了记得改回来,TODO
+				// "searchMicrosoftSymbolServer": true,
+				// "searchNuGetOrgSymbolServer": true,
 				// 符号缓存目录,默认%TEMP%\\SymbolCache,Linux则是~/.dotnet/symbolcache
 				// "cachePath": ""
 			},
@@ -132,14 +142,19 @@
 			// 默认调试器要求pdb和源代码完全对应,这个禁用此要求,放宽条件允许不完全对应的源码作为映射
 			"requireExactSource": false,
 			// 符号搜索路径配置
-			// "symbolOptions": {
-			// 	// 可以是本地目录或web地址,指定除ms和nuget之外的符号搜索位置
-			// 	// "searchPaths": [],
-			// 	"searchMicrosoftSymbolServer": true,
-			// 	"searchNuGetOrgSymbolServer": true,
-			// 	// 符号缓存目录,默认%TEMP%\\SymbolCache,Linux则是~/.dotnet/symbolcache
-			// 	// "cachePath": ""
-			// },
+			"symbolOptions": {
+				// 可以是本地目录或web地址,指定除ms和nuget之外的符号搜索位置
+				"searchPaths": [
+					"https://symbols.nuget.org/download/symbols",
+					"https://msdl.microsoft.com/download/symbols"
+				],
+				// 天知道为什么下面两个选项一开就无法调试,不过我们可以利用上面的配置绕过这个问题
+				// 但是哪天修复了记得改回来,TODO
+				// "searchMicrosoftSymbolServer": true,
+				// "searchNuGetOrgSymbolServer": true,
+				// 符号缓存目录,默认%TEMP%\\SymbolCache,Linux则是~/.dotnet/symbolcache
+				// "cachePath": ""
+			},
 			// sourcelink配置
 			"sourceLinkOptions": {
 				"*": {
