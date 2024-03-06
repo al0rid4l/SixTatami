@@ -29,9 +29,7 @@ $argss += " -c $releaseMode"
 echo "$releaseMode Build $c"
 echo "RID: $r"
 if ($c -match "csproj$") {
-	echo "$cmd $c $argss"
-	# Invoke-Expression "$cmd $c $argss"
+	Invoke-Expression "$cmd $c $argss"
 } else {
-	echo "$cmd $argss"
-	# Invoke-Expression "$cmd $argss"
+	Invoke-Expression "$cmd $argss"
 }

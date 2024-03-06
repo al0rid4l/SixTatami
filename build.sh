@@ -41,7 +41,7 @@ echo "$release Build $project"
 echo "RID: $rid"
 
 if [[ $project =~ csproj$ ]]; then
-	echo "$cmd$project$args"
+	$cmd$project$args
 else
-	echo "$cmd$args"
+	$cmd$args
 fi
