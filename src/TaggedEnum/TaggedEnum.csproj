@@ -101,6 +101,8 @@
     <!-- <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder> -->
     <!-- 将pdb打包到发布内容作为符号包单独发布 -->
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<!-- fix paket for symbols, https://github.com/fsprojects/Paket/issues/3685#issuecomment-744373253 -->
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <!-- 优化 -->
     <Optimize>true</Optimize>
     <!-- 单文件和selfcontained -->
@@ -134,7 +136,7 @@
 		<DebuggerSupport>false</DebuggerSupport> -->
     <!-- 裁剪分析 -->
     <!-- <EnableTrimAnalyzer>true</EnableTrimAnalyzer> -->
-    <IsTrimmable>true</IsTrimmable>
+    <!-- <IsTrimmable>true</IsTrimmable> -->
     <!-- runtime -->
     <!-- GC -->
     <!-- <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
