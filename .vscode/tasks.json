@@ -34,6 +34,28 @@
 				"Debug",
 			],
 			"problemMatcher": "$msCompile"
+		}, {
+			"label": "build:Examples",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/src/Examples/Examples.csproj",
+				"-c",
+				"Debug",
+			],
+			"problemMatcher": "$msCompile"
+		}, {
+			"label": "build:TaggedEnum",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/src/TaggedEnum/TaggedEnum.csproj",
+				"-c",
+				"Debug",
+			],
+			"problemMatcher": "$msCompile"
 		},
 	]
 }

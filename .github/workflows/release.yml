@@ -53,6 +53,8 @@ jobs:
               - 'src/Datastructures/**'
             Extensions:
               - 'src/Extensions/**'
+            TaggedEnum:
+              - 'src/TaggedEnum/**'
 
       - name: Build Utilities
         if: steps.changes.outputs.Utilities == 'true'
@@ -89,6 +91,18 @@ jobs:
       - name: Publish Extensions
         if: steps.changes.outputs.Extensions == 'true'
         run: dotnet nuget push src/Extensions/bin/Release/*.nupkg -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json
+
+      - name: Build TaggedEnum
+        if: steps.changes.outputs.Extensions == 'true'
+        run: ./build.sh -z 1 -c src/TaggedEnum/TaggedEnum.csproj
+
+      - name: Pack TaggedEnum
+        if: steps.changes.outputs.TaggedEnum == 'true'
+        run: dotnet pack src/TaggedEnum/TaggedEnum.csproj --include-symbols -c Release
+
+      - name: Publish TaggedEnum
+        if: steps.changes.outputs.TaggedEnum == 'true'
+        run: dotnet nuget push src/TaggedEnum/bin/Release/*.nupkg -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json
   # release:
   #   runs-on: windows-latest
   #   steps:
