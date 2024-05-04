@@ -27,6 +27,8 @@
     <!-- <AssemblyName>$(Exefile)</AssemblyName> -->
     <!-- 输出目录 -->
     <!-- <OutputPath>Test\</OutputPath> -->
+		<!-- 如果源生成器产物不作为运行时依赖则应当开启下面配置 -->
+		<!-- <IncludeBuildOutput>false</IncludeBuildOutput> -->
     <!-- 预处理器符号定义 -->
     <DefineConstants Condition="$(RuntimeIdentifier.Contains('win'))">WINDOWS</DefineConstants>
     <DefineConstants Condition="$(RuntimeIdentifier.Contains('linux'))">$(DefineConstants);LINUX</DefineConstants>
@@ -167,6 +169,8 @@
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="LICENSE" Pack="true" PackagePath="\" />
+    <!-- for source generator -->
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/roslyn$(ROSLYN_VERSION)/dotnet/cs" Visible="false" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
