@@ -5,7 +5,7 @@ namespace TaggedEnum;
 	Inherited = false,
 	AllowMultiple = false
 	)]
-public sealed class Value<TValue>(TValue v): Attribute {
+public sealed class Data<TValue>(TValue v): Attribute {
 	public TValue V { get; private set; } = v;
 }
 
@@ -15,12 +15,12 @@ public sealed class Value<TValue>(TValue v): Attribute {
 	AllowMultiple = false
 	)]
 // TValue default is string
-public sealed class Value: Attribute {
+public sealed class Data: Attribute {
 	public string? V { get; private set; }
 
-	public Value(string str) {
+	public Data(string str) {
 		V = str;
 	}
 	
-	public Value() {}
+	public Data() {}
 }

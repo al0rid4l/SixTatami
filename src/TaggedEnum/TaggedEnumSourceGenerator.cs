@@ -1,34 +1,42 @@
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+using static TaggedEnum.Util;
 
 namespace TaggedEnum;
 
 [Generator(LanguageNames.CSharp)]
 public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
+	private const string TaggedAttrName = "TaggedEnum.Tagged";
+	private const string TaggedGenericAttrName = "TaggedEnum.Tagged`1";
+	private const string DataAttrName = "TaggedEnum.Data";
+	private const string DataGenericAttrName = "TaggedEnum.Data`1";
+
 	public void Initialize(IncrementalGeneratorInitializationContext context) {
-		static bool IsEnum(SyntaxNode node, CancellationToken cancellationToken) => node is EnumDeclarationSyntax;
+		static bool IsEnum(SyntaxNode node, CancellationToken _) => node is EnumDeclarationSyntax;
+
+		// if (!Debugger.IsAttached){
+		// 	Debugger.Launch();
+		// }
 		
-		Span<string> taggedAttrs = ["TaggedEnum.Tagged", "TaggedEnum.Tagged`1"];
+		Span<string> taggedAttrs = [TaggedAttrName, TaggedGenericAttrName];
 		foreach (var taggedAttrName in taggedAttrs) {
 			var provider = context.SyntaxProvider.ForAttributeWithMetadataName(taggedAttrName, 
 				IsEnum,
 				TransformEnumPayload
 			)
-			.Where(NotNull)
-			.Select(static (v, _) => ToNonNullable(v))
+			.Where(NotNullValueType)
+			.Select(NullableToValueType)
 			.Select(ProcessMembers);
 
 			context.RegisterSourceOutput(provider, GenerateSource);
 		}
 	}
 
-	private static TypeInfo? TransformEnumPayload(GeneratorAttributeSyntaxContext ctx, CancellationToken cancellationToken) {
+	private static TypeInfo? TransformEnumPayload(GeneratorAttributeSyntaxContext ctx, CancellationToken _) {
 		// if (!Debugger.IsAttached){
 		// 	Debugger.Launch();
 		// }
@@ -46,13 +54,9 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			return null;
 		}
 		
-		var attrSymbolList = targetSymbol.GetAttributes();
-		var taggedType = compilation.GetTypeByMetadataName("TaggedEnum.Tagged");
-		var taggedGenericType = compilation.GetTypeByMetadataName("TaggedEnum.Tagged`1");
-		var taggedAttrList = attrSymbolList
-			.Select(static data => data?.AttributeClass)
-			.Where(NotNull)
-			.Where(data => SymbolEqualityComparer.Default.Equals(data, taggedType) || (!data!.IsDefinition && SymbolEqualityComparer.Default.Equals(data.OriginalDefinition, taggedGenericType)));
+		var taggedType = compilation.GetTypeByMetadataName(TaggedAttrName);
+		var taggedGenericType = compilation.GetTypeByMetadataName(TaggedGenericAttrName);
+		var taggedAttrList = targetSymbol.GetAttributesDataByAttribute([taggedType!, taggedGenericType!]);
 		
 		if (taggedAttrList.Count() > 1) {
 			// TODO　发出错误警告
@@ -87,7 +91,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				// TODO　发出错误警告
 				return null;
 			}
-			data.ValueTypeName = genericArg.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+			data.DataTypeName = genericArg.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
 		} else if (attrConstructor is {
 			NamedArguments: [{
 				Key: "UseAll",
@@ -105,32 +109,94 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		// }
 		var globalLength = "global::".Length;
 		var @namespace = data.Type.NamespaceName == "<global namespace>" ? "" : $"namespace {data.Type.NamespaceName[globalLength..]};";
-		var typeName = data.Type.TypeName[globalLength..];
+		var fullNamespace = data.Type.NamespaceName == "<global namespace>" ? "" : data.Type.NamespaceName[globalLength..];
+		var fullTypeName = data.Type.TypeName[globalLength..];
+		var formattedNamespace = string.Join("", fullNamespace.Split('.'));
+		var formattedTypeName = string.Join("", fullTypeName.Split('.'));
 		var nameValueMap = data.Members.Select(m => $@"{{{data.Type.TypeName}.{m.MemberName}, ""{data.Type.TypeName}.{m.MemberName}""}},").Aggregate("", static (current, next) => current + "\n\t\t" + next);
-		var conditionalBranches = data.Members.Where(static m => m.HasValue).Select(m => $"{data.Type.TypeName}.{m.MemberName} => ({m.TypeName}){m.Value},").Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
+		var valueNameMap = data.Members.Select(m => $@"{{""{m.MemberName}"", {data.Type.TypeName}.{m.MemberName}}},").Aggregate("", static (current, next) => current + "\n\t\t" + next);
+		var valueDataConditionalBranches = data.Members.Where(static m => m.HasData).Select(m => $"{data.Type.TypeName}.{m.MemberName} => ({m.TypeName}){m.Data},").Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
+		var nameDataConditionalBranches = data.Members.Where(static m => m.HasData).Select(m => $@"""{m.MemberName}"" => ({m.TypeName}){m.Data},").Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
+		var valueNameConditionalBranches = data.Members.Select(m => $@"{data.Type.TypeName}.{m.MemberName} => ""{m.MemberName}"",").Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
 		var source = $$"""
 		// <auto-generated />
 		#nullable enable
 		using System.Runtime.CompilerServices;
+		using System.Diagnostics.CodeAnalysis;
+		using System.Diagnostics;
 		using TaggedEnum;
 
 		{{@namespace}}
 
 		[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
-		{{data.Type.Modifiers}} static class {{typeName}}Extension {
-			private static readonly Dictionary<{{data.Type.TypeName}}, string> NameValueMap = new() {
+		{{data.Type.Modifiers}} static class {{formattedTypeName}}Extension {
+			private static readonly Dictionary<{{data.Type.TypeName}}, string> NameValueMap = new(new {{formattedTypeName}}Comparer()) {
 				{{nameValueMap}}
+			};
+
+			private static readonly Dictionary<string, {{data.Type.TypeName}}> ValueNameMap = new() {
+				{{valueNameMap}}
 			};
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
-			public static {{data.Type.ValueTypeName}} Value(this {{data.Type.TypeName}} self) 
+			public static {{data.Type.DataTypeName}} Data(this {{data.Type.TypeName}} self) 
 				=> self switch {
-					{{conditionalBranches}}
-					_ => throw new ValueNotFoundException($"Value of {NameValueMap[self]} not found.")
+					{{valueDataConditionalBranches}}
+					_ => throw new DataNotFoundException($"Data of {NameValueMap[self]} not found.")
 				};
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
+			public static string ToStringFast(this {{data.Type.TypeName}} self) 
+				=> self switch {
+					{{valueNameConditionalBranches}}
+					_ => throw new UnreachableException("Should never reach here.")
+				};
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
+			public static bool HasName(this {{data.Type.TypeName}} self, string name) 
+				=> self.ToStringFast() == name;
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
+			public static bool HasData(this {{data.Type.TypeName}} self, {{data.Type.DataTypeName}} data) 
+				=> self.Data() == data;
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
+			public static bool Equals(this {{data.Type.TypeName}} self, {{data.Type.TypeName}} v) 
+				=> self == v;
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
+			public static {{data.Type.DataTypeName}} GetDataByName(string name) 
+				=> name switch {
+					{{nameDataConditionalBranches}}
+					_ => throw new DataNotFoundException($"Data of {name} not found.")
+				};
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
+			public static {{data.Type.TypeName}} GetValueByName(string name) 
+				=> ValueNameMap[name];
+		}
+		
+		internal sealed class {{formattedTypeName}}Comparer: IEqualityComparer<{{data.Type.TypeName}}> {
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public bool Equals({{data.Type.TypeName}} x, {{data.Type.TypeName}} y) => x == y;
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public int GetHashCode([DisallowNull] {{data.Type.TypeName}} obj) => (int)obj;
 		}
 		""";
 		ctx.AddSource($"{(data.Type.NamespaceName == "<global namespace>" ? "" : data.Type.NamespaceName["global::".Length..])}{data.Type.TypeName["global::".Length..]}TaggedEnum.g.cs", SourceText.From(source, Encoding.UTF8));
@@ -140,54 +206,48 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		// if (!Debugger.IsAttached) {
 		// 	Debugger.Launch();
 		// }
-		var valueType = enumTypeInfo.SemanticModel.Compilation.GetTypeByMetadataName("TaggedEnum.Value");
-		var valueGenericType = enumTypeInfo.SemanticModel.Compilation.GetTypeByMetadataName("TaggedEnum.Value`1");
-		var memberValueMap = enumTypeInfo.Symbol.GetMembers()
+		var dataType = enumTypeInfo.SemanticModel.Compilation.GetTypeByMetadataName(DataAttrName);
+		var dataGenericType = enumTypeInfo.SemanticModel.Compilation.GetTypeByMetadataName(DataGenericAttrName);
+		var memberDataMap = enumTypeInfo.Symbol.GetMembers()
 			.OfType<IFieldSymbol>()
-			.Select((m, cancellationToken) => {
-				var memberValueAttrData = m.GetAttributes()
-					.Where(attrData => 
-						NotNull(attrData)
-						&& NotNull(attrData.AttributeClass)
-						&& (SymbolEqualityComparer.Default.Equals(attrData.AttributeClass, valueType)
-						|| (!attrData.AttributeClass.IsDefinition
-							&& SymbolEqualityComparer.Default.Equals(attrData.AttributeClass.OriginalDefinition, valueGenericType))));
+			.Select((m, _) => {
+				var memberDataAttrData = m.GetAttributesDataByAttribute([dataType!, dataGenericType!]);
 
-				var valueAttrCount = memberValueAttrData.Count();
+				var dataAttrCount = memberDataAttrData.Count();
 				var memberInfo = new MemberInfo() {
 					MemberName = m.Name,
 					FieldValue = m.ConstantValue!.ToString()
 				};
 
-				if (valueAttrCount > 1) {
+				if (dataAttrCount > 1) {
 					// TODO error
-				} else if (valueAttrCount == 0) {
+				} else if (dataAttrCount == 0) {
 					if (enumTypeInfo.UseAll) {
-						memberInfo.Value = $@"""{m.Name}""";
+						memberInfo.Data = $@"""{m.Name}""";
 						memberInfo.TypeName = "string";
-						memberInfo.HasValue = true;
+						memberInfo.HasData = true;
 					} else {
 						// TODO error
 					}
 				} else {
-					var valueAttrData = memberValueAttrData.FirstOrDefault();
+					var dataAttrData = memberDataAttrData.FirstOrDefault();
 
-					if (valueAttrData.ConstructorArguments.Length > 0) {
-						var value = valueAttrData.ConstructorArguments.FirstOrDefault();
-						var valueTypeName = value.Type?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-						if (valueTypeName != enumTypeInfo.ValueTypeName) {
+					if (dataAttrData.ConstructorArguments.Length > 0) {
+						var data = dataAttrData.ConstructorArguments.FirstOrDefault();
+						var dataTypeName = data.Type?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+						if (dataTypeName != enumTypeInfo.DataTypeName) {
 							// TODO error
 						} else {
-							memberInfo.Value = value.Value is string str ? $@"""{str}""" : value.Value?.ToString() ?? string.Empty;
-							memberInfo.TypeName = valueTypeName; 
-							memberInfo.HasValue = true;
+							memberInfo.Data = data.Value is string str ? $@"""{str}""" : data.Value?.ToString() ?? string.Empty;
+							memberInfo.TypeName = dataTypeName; 
+							memberInfo.HasData = true;
 						}
-					} else if (enumTypeInfo.ValueTypeName != TypeInfo.DefaultType) {
+					} else if (enumTypeInfo.DataTypeName != TypeInfo.DefaultType) {
 						// TODO error
 					} else {
-						memberInfo.Value = $@"""{m.Name}""";
+						memberInfo.Data = $@"""{m.Name}""";
 						memberInfo.TypeName = "string";
-						memberInfo.HasValue = true;
+						memberInfo.HasData = true;
 					}
 				}
 				return memberInfo;
@@ -195,18 +255,10 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		
 		return new FinalResult() {
 			Type = enumTypeInfo,
-			Members = memberValueMap
+			Members = memberDataMap
 		};
 	}
 	
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static bool NotNullClass<T>([NotNullWhen(true)]T? v) where T: class => v is not null;
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static bool NotNull<T>([NotNullWhen(true)]T? v) => v is not null;
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static T ToNonNullable<T>(T? v) where T: struct => v!.Value;
 }
 
 internal struct TypeInfo {
@@ -219,18 +271,18 @@ internal struct TypeInfo {
 	public required string TypeName { get; init; }
 	public required string NamespaceName { get; init; }
 	// public ITypeSymbol ValueType { get; init; };
-	public string ValueTypeName = DefaultType;
+	public string DataTypeName = DefaultType;
 	public required string Modifiers { get; init; }
 }
 
 internal struct MemberInfo {
 	public MemberInfo() {}
 	
-	public bool HasValue = false;
+	public bool HasData = false;
 	
 	public required string MemberName { get; init; }
 	
-	public string Value = string.Empty;
+	public string Data = string.Empty;
 
 	public string TypeName = string.Empty;
 

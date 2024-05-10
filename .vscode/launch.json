@@ -250,7 +250,67 @@
 			"request": "launch",
 			"preLaunchTask": "build:TaggedEnum",
 			// If you have changed target frameworks, make sure to update the program path.
-			"program": "${workspaceFolder}/src/TaggedEnum/bin/Debug/netstandard2.1/TaggedEnum.dll",
+			"program": "${workspaceFolder}/src/TaggedEnum/bin/Debug/netstandard2.0/TaggedEnum.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}",
+			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+			"console": "internalConsole",
+			"stopAtEntry": false,
+			"justMyCode": false,
+			// 抑制JIT优化
+			"suppressJITOptimizations": true,
+			// 默认调试器要求pdb和源代码完全对应,这个禁用此要求,放宽条件允许不完全对应的源码作为映射
+			"requireExactSource": false,
+			// 符号搜索路径配置
+			"symbolOptions": {
+				// 可以是本地目录或web地址,指定除ms和nuget之外的符号搜索位置
+				"searchPaths": [
+					"https://symbols.nuget.org/download/symbols",
+					"https://msdl.microsoft.com/download/symbols"
+				],
+				// 天知道为什么下面两个选项一开就无法调试,不过我们可以利用上面的配置绕过这个问题
+				// 但是哪天修复了记得改回来,TODO
+				// "searchMicrosoftSymbolServer": true,
+				// "searchNuGetOrgSymbolServer": true,
+				// 符号缓存目录,默认%TEMP%\\SymbolCache,Linux则是~/.dotnet/symbolcache
+				// "cachePath": ""
+			},
+			// sourcelink配置
+			"sourceLinkOptions": {
+				"*": {
+					"enabled": true
+				}
+			},
+			// 是否允许跳过运算符重载和getter/setter
+			// "enableStepFiltering": false,
+			// 用于远程调试
+			// "pipeTransport": {
+			// 	"pipeCwd": "${workspaceFolder}",
+			// 	"pipeProgram": "enter the fully qualified path for the pipe program name, for example '/usr/bin/ssh'",
+			// 	"pipeArgs": [],
+			// 	"debuggerPath": "enter the path for the debugger on the target machine, for example ~/vsdbg/vsdbg"
+			// },
+			// pdb映射符号文件
+			// "sourceFileMap": {
+			// 	"searchcs": "realcs"
+			// },
+			// for ASP
+			// "serverReadyAction": {
+			// 	"action": "openExternally",
+			// 	"pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+			// },
+			"env": {
+				"HTTP_PROXY": "http://127.0.0.1:2080",
+				"HTTPS_PROXY": "http://127.0.0.1:2080",
+				"ALL_PROXY": "http://127.0.0.1:2080",
+			}
+		}, {
+			"name": "Debug:RoslynHelper",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build:RoslynHelper",
+			// If you have changed target frameworks, make sure to update the program path.
+			"program": "${workspaceFolder}/src/RoslynHelper/bin/Debug/netstandard2.0/RoslynHelper.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}",
 			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

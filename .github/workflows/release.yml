@@ -55,6 +55,8 @@ jobs:
               - 'src/Extensions/**'
             TaggedEnum:
               - 'src/TaggedEnum/**'
+            RoslynHelper:
+              - 'src/RoslynHelper/**'
 
       - name: Build Utilities
         if: steps.changes.outputs.Utilities == 'true'
@@ -93,7 +95,7 @@ jobs:
         run: dotnet nuget push src/Extensions/bin/Release/*.nupkg -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json
 
       - name: Build TaggedEnum
-        if: steps.changes.outputs.Extensions == 'true'
+        if: steps.changes.outputs.TaggedEnum == 'true'
         run: ./build.sh -z 1 -c src/TaggedEnum/TaggedEnum.csproj
 
       - name: Pack TaggedEnum
@@ -103,6 +105,18 @@ jobs:
       - name: Publish TaggedEnum
         if: steps.changes.outputs.TaggedEnum == 'true'
         run: dotnet nuget push src/TaggedEnum/bin/Release/*.nupkg -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json
+
+      - name: Build RoslynHelper
+        if: steps.changes.outputs.RoslynHelper == 'true'
+        run: ./build.sh -z 1 -c src/RoslynHelper/RoslynHelper.csproj
+
+      - name: Pack RoslynHelper
+        if: steps.changes.outputs.RoslynHelper == 'true'
+        run: dotnet pack src/RoslynHelper/RoslynHelper.csproj --include-symbols -c Release
+
+      - name: Publish RoslynHelper
+        if: steps.changes.outputs.RoslynHelper == 'true'
+        run: dotnet nuget push src/RoslynHelper/bin/Release/*.nupkg -k ${{secrets.NUGET_TOKEN}} -s https://api.nuget.org/v3/index.json
   # release:
   #   runs-on: windows-latest
   #   steps:

@@ -56,6 +56,17 @@
 				"Debug",
 			],
 			"problemMatcher": "$msCompile"
+		}, {
+			"label": "build:RoslynHelper",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/src/RoslynHelper/RoslynHelper.csproj",
+				"-c",
+				"Debug",
+			],
+			"problemMatcher": "$msCompile"
 		},
 	]
 }
