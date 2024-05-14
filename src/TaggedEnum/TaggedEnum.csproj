@@ -175,8 +175,8 @@
     <!-- for source generator -->
     <None Include="$(OutputPath)/$(AssemblyName).dll" Pack="true" PackagePath="analyzers/roslyn$(ROSLYN_VERSION)/dotnet/cs" Visible="false" />
   </ItemGroup>
-  <ItemGroup>
+  <!-- <ItemGroup>
     <ProjectReference Include="../RoslynHelper/RoslynHelper.csproj" />
-  </ItemGroup>
+  </ItemGroup> -->
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
