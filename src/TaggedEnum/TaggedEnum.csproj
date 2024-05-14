@@ -43,7 +43,7 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>Recommended</AnalysisMode>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <NoWarn>CA1051,CA1725,CA2211,CA1710,RCS1158,CA1000</NoWarn>
+    <NoWarn>CA1051,CA1725,CA2211,CA1710,RCS1158,CA1000,RS2000</NoWarn>
     <!-- for source generator -->
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <!-- T4模板 -->

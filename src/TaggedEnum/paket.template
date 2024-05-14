@@ -1,0 +1,13 @@
+type project
+id TaggedEnum
+version 0.1.1
+authors al0rid4l
+licenseExpression MIT
+description
+  Enum like tagged union
+projectUrl https://github.com/al0rid4l/SixTatami
+repositoryUrl https://github.com/al0rid4l/SixTatami
+files
+  ./README.md ==> ./src/TaggedEnum/obj/Release
+  ./LICENSE ==> ./src/TaggedEnum/obj/Release
+include-pdbs true
