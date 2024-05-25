@@ -16,9 +16,9 @@ public sealed class Data<TValue>(TValue v): Attribute {
 	)]
 // TValue default is string
 public sealed class Data: Attribute {
-	public string? V { get; private set; }
+	public object? V { get; private set; }
 
-	public Data(string str) {
+	public Data(object str) {
 		V = str;
 	}
 	
