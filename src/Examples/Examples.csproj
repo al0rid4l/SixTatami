@@ -178,4 +178,12 @@
 		<None Include="README.md" Pack="true" PackagePath="\"/>
 		<None Include="LICENSE" Pack="true" PackagePath="\"/>
 	</ItemGroup> -->
+	<ItemGroup>
+		<!-- <ProjectReference Include="../TaggedEnum/TaggedEnum.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" /> -->
+		<ProjectReference Include="../TaggedEnum/TaggedEnum.csproj" OutputItemType="Analyzer" />
+		<ProjectReference Include="../Utilities/Utilities.csproj" />
+		<!-- <ProjectReference Include="../RoslynHelper/RoslynHelper.csproj" /> -->
+		<!-- <ProjectReference Include="../SGDemo/SGDemo.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" /> -->
+		<!-- <ProjectReference Include="../TaggedEnum/TaggedEnum.csproj" /> -->
+	</ItemGroup>
 </Project>
