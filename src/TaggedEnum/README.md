@@ -1,5 +1,10 @@
 # TaggedEnum
 
+## Install
+```bash
+$ dotnet add package TaggedEnum
+```
+
 ## Usage
 
 ```csharp
@@ -9,7 +14,6 @@ namespace Examples;
 
 [Tagged]
 public enum Book0 {
-
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,
 	[Data("Advanced Programming in the UNIX Environment")]
@@ -32,7 +36,6 @@ Console.WriteLine(ExamplesBook0Extension.GetValueByName("CSAPP")); // Book0.CSAP
 
 [Tagged<int>]
 public enum Book1 {
-
 	[Data(1)]
 	CSAPP,
 	[Data<int>(2)]
@@ -51,7 +54,6 @@ Console.WriteLine(Book1.SICP.ToStringFast()); // SICP
 
 [Tagged]
 public enum Book2 {
-
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,
 	[Data] // Data is "APUE"
@@ -70,7 +72,6 @@ Console.WriteLine(Book2.SICP.ToStringFast()); // SICP
 
 [Tagged(UseAll = true)]
 public enum Book3 {
-
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,
 	APUE, // Data is "APUE"
