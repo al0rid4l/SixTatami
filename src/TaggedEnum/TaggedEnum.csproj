@@ -27,6 +27,8 @@
     <!-- <AssemblyName>$(Exefile)</AssemblyName> -->
     <!-- 输出目录 -->
     <!-- <OutputPath>Test\</OutputPath> -->
+		<!-- for source generator from https://github.com/dotnet/roslyn/blob/main/docs/features/incremental-generators.cookbook.md#package-a-generator-as-a-nuget-package -->
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <!-- 如果源生成器产物不作为运行时依赖则应当开启下面配置 -->
     <!-- <IncludeBuildOutput>false</IncludeBuildOutput> -->
     <!-- 预处理器符号定义 -->
