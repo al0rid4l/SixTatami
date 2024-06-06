@@ -37,5 +37,5 @@ Console.WriteLine(Book3.SICP.ToStringFast());
 Console.WriteLine("");
 
 Console.WriteLine("Book0Extension");
-Console.WriteLine(ExamplesBook0Extension.GetDataByName("CSAPP"));
-Console.WriteLine(ExamplesBook0Extension.GetValueByName("CSAPP"));
+Console.WriteLine(ExamplesBook0Extension.TryGetDataByName("CSAPP", out var v));
+Console.WriteLine(ExamplesBook0Extension.TryGetValueByName("CSAPP", out var vv));

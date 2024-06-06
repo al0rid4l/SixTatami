@@ -325,17 +325,22 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
-			public static {{data.DataTypeName}} GetDataByName(string name) 
-				=> name switch {
+			public static bool TryGetDataByName(string name, [NotNullWhen(true)]out {{data.DataTypeName}}? v) {
+				v = name switch {
 					{{nameDataConditionalBranches}}
-					_ => throw new DataNotFoundException($"Data of {name} not found.")
+					_ => null
 				};
+				return v is not null;
+			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
-			public static {{data.TypeName}} GetValueByName(string name) 
-				=> ValueNameMap[name];
+			public static bool TryGetValueByName(string name, [NotNullWhen(true)]out {{data.TypeName}}? v) {
+				var result = ValueNameMap.TryGetValue(name, out var vv);
+				v = vv;
+				return result;
+			}
 		}
 		
 		internal sealed class {{formattedTypeName}}Comparer: IEqualityComparer<{{data.TypeName}}> {
