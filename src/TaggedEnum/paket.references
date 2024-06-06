@@ -1,4 +1,4 @@
-Microsoft.CodeAnalysis.CSharp copy_local: false
-Microsoft.CodeAnalysis.Analyzers copy_local: false
-IndexRange copy_local: false
-Nullable copy_local: false
+Microsoft.CodeAnalysis.CSharp copy_local: true
+Microsoft.CodeAnalysis.Analyzers copy_local: true
+IndexRange copy_local: true
+Nullable copy_local: true
