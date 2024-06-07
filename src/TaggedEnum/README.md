@@ -33,6 +33,7 @@ Console.WriteLine(Book0.SICP.ToStringFast()); // SICP
 Console.WriteLine("Book0Extension");
 Console.WriteLine(ExamplesBook0Extension.TryGetDataByName("CSAPP", out var v)); // true, v is Computer Systems: A Programmer's Perspective
 Console.WriteLine(ExamplesBook0Extension.TryGetValueByName("CSAPP", out var vv)); // true, vv is Book0.CSAPP
+Console.WriteLine(ExamplesBook0Extension.TryGetValueByData("Computer Systems: A Programmer's Perspective", out var vvv)); // CSAPP
 
 [Tagged<int>(Inline = false)] // Inline = true, will add [MethodImpl(MethodImplOptions.AggressiveInlining)] on Data(), ToStringFast(), TryGetDataByName()
 public enum Book1 {

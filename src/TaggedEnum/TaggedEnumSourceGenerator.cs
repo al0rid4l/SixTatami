@@ -261,6 +261,10 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			.Where(static m => m.HasData)
 			.Select(m => $"{data.TypeName}.{m.MemberName} => ({m.TypeName}){m.Data},")
 			.Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
+		var dataValueConditionalBranches = data.Members
+			.Where(static m => m.HasData)
+			.Select(m => $"({m.TypeName}){m.Data} => {data.TypeName}.{m.MemberName},")
+			.Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
 		var nameDataConditionalBranches = data.Members
 			.Where(static m => m.HasData)
 			.Select(m => $@"""{m.MemberName}"" => ({m.TypeName}){m.Data},")
@@ -345,6 +349,17 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				var result = ValueNameMap.TryGetValue(name, out var vv);
 				v = vv;
 				return result;
+			}
+
+			{{inlineAttr}}
+			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
+			public static bool TryGetValueByData({{data.DataTypeName}} data, [NotNullWhen(true)]out {{data.TypeName}}? v) {
+				v = data switch {
+					{{dataValueConditionalBranches}}
+					_ => null
+				};
+				return v is not null;
 			}
 		}
 		
