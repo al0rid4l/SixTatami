@@ -4,7 +4,7 @@
   <PropertyGroup>
     <!-- 包信息 -->
     <PackageId>TaggedEnum</PackageId>
-    <PackageVersion>1.1.0</PackageVersion>
+    <PackageVersion>1.2.0</PackageVersion>
     <!-- <PackageIcon>TaggedEnum</PackageIcon> -->
     <PackageTags>SourceGenerator;Enum</PackageTags>
     <Title>TaggedEnum</Title>
