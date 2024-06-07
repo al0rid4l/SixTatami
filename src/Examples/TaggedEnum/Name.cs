@@ -4,7 +4,6 @@ namespace Examples;
 
 [Tagged]
 public enum Book0 {
-
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,
 	[Data("Advanced Programming in the UNIX Environment")]
@@ -13,9 +12,8 @@ public enum Book0 {
 	SICP
 }
 
-[Tagged<int>]
+[Tagged<int>(Inline = false)]
 public enum Book1 {
-
 	[Data(1)]
 	CSAPP,
 	[Data<int>(2)]
@@ -26,7 +24,6 @@ public enum Book1 {
 
 [Tagged]
 public enum Book2 {
-
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,
 	[Data] // Data is "APUE"
@@ -35,9 +32,8 @@ public enum Book2 {
 	SICP
 }
 
-[Tagged(UseAll = true)]
+[Tagged(UseAll = true, Inline = false)]
 public enum Book3 {
-
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,
 	APUE, // Data is "APUE"

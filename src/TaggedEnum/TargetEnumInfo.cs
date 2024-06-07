@@ -7,6 +7,7 @@ internal struct TargetEnumInfo {
 	public const string DefaultType = "string";
 	public TargetEnumInfo() {}
 	public bool UseAll = false;
+	public bool Inline = true;
 	public required SemanticModel SemanticModel { get; init; }
 	public required EnumDeclarationSyntax SyntaxNode { get; init; }
 	public required INamedTypeSymbol Symbol { get; init; }

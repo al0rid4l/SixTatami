@@ -5,7 +5,9 @@ namespace TaggedEnum;
 	Inherited = false,
 	AllowMultiple = false
 	)]
-public sealed class Tagged<TValue>: Attribute;
+public sealed class Tagged<TValue>: Attribute {
+	public bool Inline = true;
+}
 
 [AttributeUsage(
 	AttributeTargets.Enum,
@@ -15,4 +17,5 @@ public sealed class Tagged<TValue>: Attribute;
 // TValue default is string
 public sealed class Tagged: Attribute {
 	public bool UseAll = false;
+	public bool Inline = true;
 }

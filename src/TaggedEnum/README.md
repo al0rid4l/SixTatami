@@ -31,10 +31,10 @@ Console.WriteLine(Book0.APUE.ToStringFast()); // APUE
 Console.WriteLine(Book0.SICP.ToStringFast()); // SICP
 
 Console.WriteLine("Book0Extension");
-Console.WriteLine(ExamplesBook0Extension.GetDataByName("CSAPP")); // Computer Systems: A Programmer's Perspective
-Console.WriteLine(ExamplesBook0Extension.GetValueByName("CSAPP")); // Book0.CSAPP
+Console.WriteLine(ExamplesBook0Extension.TryGetDataByName("CSAPP", out var v)); // true, v is Computer Systems: A Programmer's Perspective
+Console.WriteLine(ExamplesBook0Extension.TryGetValueByName("CSAPP", out var vv)); // true, vv is Book0.CSAPP
 
-[Tagged<int>]
+[Tagged<int>(Inline = false)] // Inline = true, will add [MethodImpl(MethodImplOptions.AggressiveInlining)] on Data(), ToStringFast(), TryGetDataByName()
 public enum Book1 {
 	[Data(1)]
 	CSAPP,
@@ -70,7 +70,7 @@ Console.WriteLine(Book2.CSAPP.ToStringFast()); // CSAPP
 Console.WriteLine(Book2.APUE.ToStringFast()); // APUE
 Console.WriteLine(Book2.SICP.ToStringFast()); // SICP
 
-[Tagged(UseAll = true)]
+[Tagged(UseAll = true, Inline = false)]
 public enum Book3 {
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,
