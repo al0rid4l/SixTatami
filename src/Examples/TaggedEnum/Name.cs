@@ -22,7 +22,7 @@ public enum Book1 {
 	SICP
 }
 
-[Tagged]
+[Tagged(UseSwitch = false)]
 public enum Book2 {
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,
@@ -32,7 +32,7 @@ public enum Book2 {
 	SICP
 }
 
-[Tagged(UseAll = true, Inline = false)]
+[Tagged(UseAll = true, Inline = false, UseSwitch = false)]
 public enum Book3 {
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,

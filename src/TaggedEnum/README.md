@@ -53,7 +53,7 @@ Console.WriteLine(Book1.CSAPP.ToStringFast()); // CSAPP
 Console.WriteLine(Book1.APUE.ToStringFast()); // APUE
 Console.WriteLine(Book1.SICP.ToStringFast()); // SICP
 
-[Tagged]
+[Tagged(UseSwitch = false)] // use switch or dictionary
 public enum Book2 {
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,
@@ -71,7 +71,7 @@ Console.WriteLine(Book2.CSAPP.ToStringFast()); // CSAPP
 Console.WriteLine(Book2.APUE.ToStringFast()); // APUE
 Console.WriteLine(Book2.SICP.ToStringFast()); // SICP
 
-[Tagged(UseAll = true, Inline = false)]
+[Tagged(UseAll = true, Inline = false, UseSwitch = false)]
 public enum Book3 {
 	[Data("Computer Systems: A Programmer's Perspective")]
 	CSAPP,

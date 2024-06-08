@@ -7,6 +7,8 @@ namespace TaggedEnum;
 	)]
 public sealed class Tagged<TValue>: Attribute {
 	public bool Inline = true;
+
+	public bool UseSwitch = true;
 }
 
 [AttributeUsage(
@@ -17,5 +19,8 @@ public sealed class Tagged<TValue>: Attribute {
 // TValue default is string
 public sealed class Tagged: Attribute {
 	public bool UseAll = false;
+
 	public bool Inline = true;
+
+	public bool UseSwitch = true;
 }

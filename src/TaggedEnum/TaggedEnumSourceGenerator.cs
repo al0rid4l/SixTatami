@@ -111,6 +111,10 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				Key: "Inline",
 				Value.Value: false
 			}),
+			UseSwitch = !attrData.NamedArguments.Any(static v => v is {
+				Key: "UseSwitch",
+				Value.Value: false
+			}),
 			SyntaxNode = targetNode,
 			SemanticModel = semanticModel,
 			Symbol = targetSymbol,
@@ -251,11 +255,21 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var fullTypeName = data.TypeName[globalLength..];
 		var formattedNamespace = string.Concat(fullNamespace.Split('.'));
 		var formattedTypeName = string.Concat(fullTypeName.Split('.'));
-		var nameValueMap = data.Members
-			.Select(m => $@"{{{data.TypeName}.{m.MemberName}, ""{data.TypeName}.{m.MemberName}""}},")
-			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
+		var formattedDataTypeName = $"{formattedTypeName}{data.DataTypeName}";
 		var valueNameMap = data.Members
+			.Select(m => $@"{{{data.TypeName}.{m.MemberName}, ""{m.MemberName}""}},")
+			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
+		var nameValueMap = data.Members
 			.Select(m => $@"{{""{m.MemberName}"", {data.TypeName}.{m.MemberName}}},")
+			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
+		var valueDataMap = data.Members
+			.Select(m => $@"{{{data.TypeName}.{m.MemberName}, ({m.TypeName}){m.Data}}},")
+			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
+		var dataValueMap = data.Members
+			.Select(m => $@"{{({m.TypeName}){m.Data}, {data.TypeName}.{m.MemberName}}},")
+			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
+		var nameDataMap = data.Members
+			.Select(m => $@"{{""{m.MemberName}"", ({m.TypeName}){m.Data}}},")
 			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
 		var valueDataConditionalBranches = data.Members
 			.Where(static m => m.HasData)
@@ -272,7 +286,114 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var valueNameConditionalBranches = data.Members
 			.Select(m => $@"{data.TypeName}.{m.MemberName} => ""{m.MemberName}"",")
 			.Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
+		var nameValueConditionalBranches = data.Members
+			.Select(m => $@"""{m.MemberName}"" => {data.TypeName}.{m.MemberName},")
+			.Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
 		var inlineAttr = data.Inline ? "[MethodImpl(MethodImplOptions.AggressiveInlining)]" : "";
+		
+		var getHashCodeImpl = data.DataTypeName == "short" ||
+													data.DataTypeName == "int" ||
+													data.DataTypeName == "long" ||
+													data.DataTypeName == "ushort" ||
+													data.DataTypeName == "uint" ||
+													data.DataTypeName == "ulong" ||
+													data.DataTypeName == "byte" ||
+													data.DataTypeName == "sbyte"
+		 											? "(int)obj" : "obj.GetHashCode()";
+		
+		var nameValueMapDict = data.UseSwitch ? "" : $$"""
+			private static readonly Dictionary<string, {{data.TypeName}}> NameValueMap = new() {
+				{{nameValueMap}}
+			};
+		""";
+
+		var nameDataMapDict = data.UseSwitch ? "" : $$"""
+			private static readonly Dictionary<string, {{data.DataTypeName}}> NameDataMap = new() {
+				{{nameDataMap}}
+			};
+		""";
+
+		var valueDataMapDict = data.UseSwitch ? "" : $$"""
+			private static readonly Dictionary<{{data.TypeName}}, {{data.DataTypeName}}> ValueDataMap = new(new {{formattedTypeName}}Comparer()) {
+				{{valueDataMap}}
+			};
+		""";
+
+		var dataValueMapDict = data.UseSwitch ? "" : $$"""
+			private static readonly Dictionary<{{data.DataTypeName}}, {{data.TypeName}}> DataValueMap = new(new {{formattedDataTypeName}}Comparer()) {
+				{{dataValueMap}}
+			};
+		""";
+		
+		var dataMethod = data.UseSwitch ? $$"""
+			=> self switch {
+					{{valueDataConditionalBranches}}
+					_ => throw new DataNotFoundException($"Data of {ValueNameMap[self]} not found.")
+				};
+		""" : $$"""
+		{
+				if (ValueDataMap.TryGetValue(self, out var data)) {
+					return data;
+				} else {
+					throw new DataNotFoundException($"Data of {ValueNameMap[self]} not found.");
+				}
+			}
+		""";
+
+		var toStringFastMethod = data.UseSwitch ? $$"""
+			=> self switch {
+					{{valueNameConditionalBranches}}
+					_ => throw new UnreachableException("Never reach here.")
+				};
+		""" : $$"""
+		{
+				if (ValueNameMap.TryGetValue(self, out var name)) {
+					return name;
+				} else {
+					throw new DataNotFoundException("Never reach here.");
+				}
+			}
+		""";
+
+		var tryGetDataByNameMethod = data.UseSwitch ? $$"""
+			v = name switch {
+				{{nameDataConditionalBranches}}
+					_ => null
+				};
+				return v is not null;
+		""" : $$"""
+			var result = NameDataMap.TryGetValue(name, out var vv);
+				v = vv;
+				return result;
+		""";
+
+		var tryGetValueByNameMethod = data.UseSwitch ? $$"""
+			v = name switch {
+				{{nameValueConditionalBranches}}
+					_ => null
+				};
+				return v is not null;
+		""" : $$"""
+			var result = NameValueMap.TryGetValue(name, out var vv);
+				v = vv;
+				return result;
+		""";
+
+		var tryGetValueByDataMethod = data.UseSwitch ? $$"""
+			v = data switch {
+				{{dataValueConditionalBranches}}
+					_ => null
+				};
+				return v is not null;
+		""" : $$"""
+			var result = DataValueMap.TryGetValue(data, out var vv);
+				v = vv;
+				return result;
+		""";
+		
+		var dataKeyEqualMethod = data.DataTypeName == "string"
+			? $"public bool Equals({data.DataTypeName}? x, {data.DataTypeName}? y) => x == y;"
+			: $"public bool Equals({data.DataTypeName} x, {data.DataTypeName} y) => x == y;";
 		
 		var source = $$"""
 		// <auto-generated />
@@ -287,31 +408,29 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
 		{{data.Modifiers}} static class {{formattedTypeName}}Extension {
-			private static readonly Dictionary<{{data.TypeName}}, string> NameValueMap = new(new {{formattedTypeName}}Comparer()) {
-				{{nameValueMap}}
-			};
-
-			private static readonly Dictionary<string, {{data.TypeName}}> ValueNameMap = new() {
+			private static readonly Dictionary<{{data.TypeName}}, string> ValueNameMap = new(new {{formattedTypeName}}Comparer()) {
 				{{valueNameMap}}
 			};
+
+			{{nameValueMapDict}}
+
+			{{nameDataMapDict}}
+
+			{{dataValueMapDict}}
+
+			{{valueDataMapDict}}
 
 			{{inlineAttr}}
 			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
 			public static {{data.DataTypeName}} Data(this {{data.TypeName}} self) 
-				=> self switch {
-					{{valueDataConditionalBranches}}
-					_ => throw new DataNotFoundException($"Data of {NameValueMap[self]} not found.")
-				};
+			{{dataMethod}}
 
 			{{inlineAttr}}
 			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
 			public static string ToStringFast(this {{data.TypeName}} self) 
-				=> self switch {
-					{{valueNameConditionalBranches}}
-					_ => throw new UnreachableException("Never reach here.")
-				};
+			{{toStringFastMethod}}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
@@ -335,31 +454,21 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
 			public static bool TryGetDataByName(string name, [NotNullWhen(true)]out {{data.DataTypeName}}? v) {
-				v = name switch {
-					{{nameDataConditionalBranches}}
-					_ => null
-				};
-				return v is not null;
+			{{tryGetDataByNameMethod}}
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
 			public static bool TryGetValueByName(string name, [NotNullWhen(true)]out {{data.TypeName}}? v) {
-				var result = ValueNameMap.TryGetValue(name, out var vv);
-				v = vv;
-				return result;
+			{{tryGetValueByNameMethod}}
 			}
 
 			{{inlineAttr}}
 			[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 			[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
 			public static bool TryGetValueByData({{data.DataTypeName}} data, [NotNullWhen(true)]out {{data.TypeName}}? v) {
-				v = data switch {
-					{{dataValueConditionalBranches}}
-					_ => null
-				};
-				return v is not null;
+			{{tryGetValueByDataMethod}}
 			}
 		}
 		
@@ -369,6 +478,14 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			public int GetHashCode([DisallowNull] {{data.TypeName}} obj) => (int)obj;
+		}
+
+		internal sealed class {{formattedDataTypeName}}Comparer: IEqualityComparer<{{data.DataTypeName}}> {
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			{{dataKeyEqualMethod}}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			public int GetHashCode([DisallowNull] {{data.DataTypeName}} obj) => {{getHashCodeImpl}};
 		}
 		""";
 		ctx.AddSource($"{(data.NamespaceName == "<global namespace>" ? "" : data.NamespaceName["global::".Length..])}{data.TypeName["global::".Length..]}TaggedEnum.g.cs", SourceText.From(source, Encoding.UTF8));
