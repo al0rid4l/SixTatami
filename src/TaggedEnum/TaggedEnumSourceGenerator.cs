@@ -913,8 +913,8 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		ctx.AddSource($"{(data.NamespaceName == "<global namespace>" ? "" : data.NamespaceName[globalLength..])}{data.TypeName[globalLength..]}TaggedEnum.g.cs", SourceText.From(source, Encoding.UTF8));
 	}
 	
-	private static string PrimitiveTypeToReadJsonType(string type) {
-		return type switch {
+	private static string PrimitiveTypeToReadJsonType(string type)
+		=> type switch {
 			"byte" => "GetByte()",
 			"sbyte" => "GetSByte()",
 			"short" => "GetInt16()",
@@ -931,10 +931,9 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			"bool" => "GetBoolean()",
 			_ => throw new ArgumentException("Invalid type name.")
 		};
-	}
 
-	private static string PrimitiveTypeToWriteJsonType(string type, string arg) {
-		return type switch {
+	private static string PrimitiveTypeToWriteJsonType(string type, string arg)
+		=> type switch {
 			"byte" => $"WriteNumberValue({arg})",
 			"sbyte" => $"WriteNumberValue({arg})",
 			"short" => $"WriteNumberValue({arg})",
@@ -951,7 +950,6 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			"bool" => $"WriteBooleanValue({arg})",
 			_ => throw new ArgumentException("Invalid type name.")
 		};
-	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static string PrimitiveTypeToDeclareType(string type) 
