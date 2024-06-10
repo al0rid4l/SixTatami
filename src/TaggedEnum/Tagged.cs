@@ -9,6 +9,8 @@ public sealed class Tagged<TValue>: Attribute {
 	public bool Inline = true;
 
 	public bool UseSwitch = true;
+
+	public bool AllowDuplicate = false;
 }
 
 [AttributeUsage(
@@ -23,4 +25,6 @@ public sealed class Tagged: Attribute {
 	public bool Inline = true;
 
 	public bool UseSwitch = true;
+
+	public bool AllowDuplicate = false;
 }

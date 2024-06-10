@@ -86,4 +86,83 @@ Console.WriteLine(Book3.SICP.Data()); // SICP
 Console.WriteLine(Book3.CSAPP.ToStringFast()); // CSAPP
 Console.WriteLine(Book3.APUE.ToStringFast()); // APUE
 Console.WriteLine(Book3.SICP.ToStringFast()); // SICP
+
+// for JSON serialize deserialize
+var options = new JsonSerializerOptions() {
+	IncludeFields = true
+};
+
+var str = $$"""
+{
+	"V0": "Computer Systems: A Programmer's Perspective",
+	"V1": null,
+	"V2": ["Advanced Programming in the UNIX Environment", "Structure and Interpretation of Computer Programs"],
+	"V3": ["Advanced Programming in the UNIX Environment", null, "Structure and Interpretation of Computer Programs"],
+	"V4": ["Advanced Programming in the UNIX Environment", "Structure and Interpretation of Computer Programs"],
+	"V5": ["Advanced Programming in the UNIX Environment", null, "Structure and Interpretation of Computer Programs"],
+	"V6": "CSAPP",
+	"V7": null,
+	"V8": ["CSAPP", "SICP"],
+	"V9": ["CSAPP", null, "SICP"],
+	"V10": ["CSAPP", "SICP"],
+	"V11": ["CSAPP", null, "SICP"]
+}
+""";
+
+var obj = JsonSerializer.Deserialize<JsonTest>(str, options);
+Console.WriteLine(obj.V1);
+
+var o = new JsonTest();
+var s = JsonSerializer.Serialize(o, options);
+Console.WriteLine(s);
+
+public class JsonTest {
+	[JsonConverter(typeof(ExamplesBook0ToDataConverter))]
+	[JsonPropertyName("V0")]
+	public Book0 V0 = Book0.CSAPP;
+
+	[JsonConverter(typeof(ExamplesBook0ToDataConverter))]
+	[JsonPropertyName("V1")]
+	public Book0? V1 = default;
+
+	[JsonConverter(typeof(ExamplesBook0ArrayToDataArrayConverter))]
+	[JsonPropertyName("V2")]
+	public Book0[] V2 = [Book0.CSAPP, Book0.SICP];
+
+	[JsonConverter(typeof(NullableExamplesBook0ArrayToDataArrayConverter))]
+	[JsonPropertyName("V3")]
+	public Book0?[] V3 = [Book0.CSAPP, null, Book0.SICP];
+
+	[JsonConverter(typeof(ExamplesBook0EnumerableToDataEnumerableConverter))]
+	[JsonPropertyName("V4")]
+	public IEnumerable<Book0> V4 = [Book0.CSAPP, Book0.SICP];
+
+	[JsonConverter(typeof(NullableExamplesBook0EnumerableToDataEnumerableConverter))]
+	[JsonPropertyName("V5")]
+	public IEnumerable<Book0?> V5 = [Book0.CSAPP, null, Book0.SICP];
+
+	[JsonConverter(typeof(ExamplesBook0ToNameConverter))]
+	[JsonPropertyName("V6")]
+	public Book0 V6 = Book0.CSAPP;
+
+	[JsonConverter(typeof(ExamplesBook0ToNameConverter))]
+	[JsonPropertyName("V7")]
+	public Book0? V7 = default;
+
+	[JsonConverter(typeof(ExamplesBook0ArrayToNameArrayConverter))]
+	[JsonPropertyName("V8")]
+	public Book0[] V8 = [Book0.CSAPP, Book0.SICP];
+
+	[JsonConverter(typeof(NullableExamplesBook0ArrayToNameArrayConverter))]
+	[JsonPropertyName("V9")]
+	public Book0?[] V9 = [Book0.CSAPP, null, Book0.SICP];
+
+	[JsonConverter(typeof(ExamplesBook0EnumerableToNameEnumerableConverter))]
+	[JsonPropertyName("V10")]
+	public IEnumerable<Book0> V10 = [Book0.CSAPP, Book0.SICP];
+
+	[JsonConverter(typeof(NullableExamplesBook0EnumerableToNameEnumerableConverter))]
+	[JsonPropertyName("V11")]
+	public IEnumerable<Book0?> V11 = [Book0.CSAPP, null, Book0.SICP];
+}
 ```
