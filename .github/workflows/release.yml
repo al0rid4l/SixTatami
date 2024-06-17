@@ -8,7 +8,7 @@ on:
 
 env:
   CI: true
-        
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/paket.lock') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-            
+
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -131,7 +131,7 @@ jobs:
   #         key: ${{ runner.os }}-nuget-${{ hashFiles('**/paket.lock') }}
   #         restore-keys: |
   #           ${{ runner.os }}-nuget-
-            
+
   #     - name: Install .NET
   #       uses: actions/setup-dotnet@v4
   #       with:

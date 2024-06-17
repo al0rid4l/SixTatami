@@ -2,6 +2,8 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+using Cysharp.Text;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
@@ -58,10 +60,10 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		// if (!Debugger.IsAttached){
 		// 	Debugger.Launch();
 		// }
-		
+
 		Span<string> taggedAttrs = [TaggedAttrName, TaggedGenericAttrName];
 		foreach (var taggedAttrName in taggedAttrs) {
-			var taggedProvider = context.SyntaxProvider.ForAttributeWithMetadataName(taggedAttrName, 
+			var taggedProvider = context.SyntaxProvider.ForAttributeWithMetadataName(taggedAttrName,
 				IsEnum,
 				TransformEnumPayload
 			)
@@ -108,7 +110,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		}) {
 			return null;
 		}
-		
+
 		var taggedType = compilation.GetTypeByMetadataName(TaggedAttrName);
 		var taggedGenericType = compilation.GetTypeByMetadataName(TaggedGenericAttrName);
 		var taggedAttrList = targetSymbol.GetAttributesDataByAttribute([taggedType!, taggedGenericType!]);
@@ -133,13 +135,13 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			NamespaceName = targetSymbol.ContainingNamespace.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
 			Modifiers = modifiers.ToString()
 		};
-		
+
 		if (taggedAttrList.Count() > 1) {
 			var location = attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken).GetLocation();
 			data.Diagnostics = [Diagnostic.Create(Rule0, location)];
 			return data;
 		}
-		
+
 
 		if (attr.IsGenericType) {
 			var genericArg = attr.TypeArguments[0];
@@ -176,7 +178,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		})) {
 			data.UseAll = true;
 		}
-		
+
 		return data;
 	}
 
@@ -203,7 +205,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 					memberInfo.Diagnostics = locations.Select(static location => Diagnostic.Create(Rule2, location));
 				} else if (dataAttrCount == 0) {
 					if (enumTypeInfo.UseAll) {
-						memberInfo.Data = $@"""{m.Name}""";
+						memberInfo.Data = ZString.Concat('"', m.Name, '"');
 						memberInfo.TypeName = "string";
 						memberInfo.HasData = true;
 					} else {
@@ -229,8 +231,8 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 								: attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken).GetLocation());
 							memberInfo.Diagnostics = locations.Select(static location => Diagnostic.Create(Rule3, location));
 						} else {
-							memberInfo.Data = data.Value is string str ? $@"""{str}""" : data.Value is char c ? $"'{c}'" : data.Value?.ToString().ToLower() ?? string.Empty;
-							memberInfo.TypeName = dataTypeName; 
+							memberInfo.Data = data.Value is string str ? ZString.Concat('"', str, '"') : data.Value is char c ? ZString.Concat('\'', c, '\'') : data.Value?.ToString().ToLower() ?? string.Empty;
+							memberInfo.TypeName = dataTypeName;
 							memberInfo.HasData = true;
 						}
 					} else if (enumTypeInfo.DataTypeName != TargetEnumInfo.DefaultType) {
@@ -246,7 +248,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 							: attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken).GetLocation());
 						memberInfo.Diagnostics = locations.Select(static location => Diagnostic.Create(Rule3, location));
 					} else {
-						memberInfo.Data = $@"""{m.Name}""";
+						memberInfo.Data = ZString.Concat('"', m.Name, '"');
 						memberInfo.TypeName = "string";
 						memberInfo.HasData = true;
 					}
@@ -254,7 +256,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 
 				if (!enumTypeInfo.AllowDuplicate) {
 					if (dataset.TryGetValue(memberInfo.Data, out var _)) {
-						var locations = memberDataAttrData.Select(attrData => 
+						var locations = memberDataAttrData.Select(attrData =>
 							attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken)
 								.ChildNodes()
 								.OfType<AttributeArgumentListSyntax>()
@@ -271,57 +273,99 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				}
 				return memberInfo;
 			}).ToArray();
-		
+
 		enumTypeInfo.Members = memberDataMap;
 		return enumTypeInfo;
 	}
-	
+
 	private void GenerateSource(SourceProductionContext ctx, TargetEnumInfo data) {
 		// if (!Debugger.IsAttached) {
 		// 	Debugger.Launch();
 		// }
+		using var sb = ZString.CreateUtf8StringBuilder();
 		var globalLength = "global::".Length;
-		var @namespace = data.NamespaceName == "<global namespace>" ? "" : $"namespace {data.NamespaceName[globalLength..]};";
-		var fullNamespace = data.NamespaceName == "<global namespace>" ? "" : data.NamespaceName[globalLength..];
+		var namespaceName = data.NamespaceName[globalLength..];
+		var @namespace = data.NamespaceName == "<global namespace>" ? "" : ZString.Concat("namespace ", namespaceName, ";");
+		var fullNamespace = data.NamespaceName == "<global namespace>" ? "" : namespaceName;
 		var fullTypeName = data.TypeName[globalLength..];
-		var formattedNamespace = string.Concat(fullNamespace.Split('.'));
-		var formattedTypeName = string.Concat(fullTypeName.Split('.'));
-		var formattedDataTypeName = $"{formattedTypeName}{data.DataTypeName}";
+		var formattedNamespace = ZString.Concat(fullNamespace.Split('.'));
+		var formattedTypeName = ZString.Concat(fullTypeName.Split('.'));
+		var formattedDataTypeName = ZString.Concat(formattedTypeName, data.DataTypeName);
 		var valueNameMap = data.Members
-			.Select(m => $@"{{{data.TypeName}.{m.MemberName}, ""{m.MemberName}""}},")
-			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
+			.Select(m => ZString.Concat('{', data.TypeName, '.', m.MemberName, ", \"", m.MemberName, "\"},"))
+			.Aggregate(sb, static (sb, next) => {
+				sb.Append("\n\t\t");
+				sb.Append(next);
+				return sb;
+			}).ToString();
 		var nameValueMap = data.Members
-			.Select(m => $@"{{""{m.MemberName}"", {data.TypeName}.{m.MemberName}}},")
-			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
+			.Select(m => ZString.Concat("{\"", m.MemberName, "\", ", data.TypeName, '.', m.MemberName, "},"))
+			.Aggregate(sb, static (sb, next) => {
+				sb.Append("\n\t\t");
+				sb.Append(next);
+				return sb;
+			}).ToString();
 		var valueDataMap = data.Members
-			.Select(m => $@"{{{data.TypeName}.{m.MemberName}, ({m.TypeName}){m.Data}}},")
-			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
+			.Select(m => ZString.Concat("{", data.TypeName, '.', m.MemberName, ", (", m.TypeName, ')', m.Data, "},"))
+			.Aggregate(sb, static (sb, next) => {
+				sb.Append("\n\t\t");
+				sb.Append(next);
+				return sb;
+			}).ToString();
 		var dataValueMap = data.Members
-			.Select(m => $@"{{({m.TypeName}){m.Data}, {data.TypeName}.{m.MemberName}}},")
-			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
+			.Select(m => ZString.Concat("{(", m.TypeName, ')', m.Data, ", ", data.TypeName, '.', m.MemberName, "},"))
+			.Aggregate(sb, static (sb, next) => {
+				sb.Append("\n\t\t");
+				sb.Append(next);
+				return sb;
+			}).ToString();
 		var nameDataMap = data.Members
-			.Select(m => $@"{{""{m.MemberName}"", ({m.TypeName}){m.Data}}},")
-			.Aggregate("", static (current, next) => current + "\n\t\t" + next);
+			.Select(m => ZString.Concat("{\"", m.MemberName, "\", (", m.TypeName, ')', m.Data, "},"))
+			.Aggregate(sb, static (sb, next) => {
+				sb.Append("\n\t\t");
+				sb.Append(next);
+				return sb;
+			}).ToString();
 		var valueDataConditionalBranches = data.Members
 			.Where(static m => m.HasData)
-			.Select(m => $"{data.TypeName}.{m.MemberName} => ({m.TypeName}){m.Data},")
-			.Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
+			.Select(m => ZString.Concat(data.TypeName, '.', m.MemberName, " => (", m.TypeName, ')', m.Data, ','))
+			.Aggregate(sb, static (sb, next) => {
+				sb.Append("\n\t\t\t");
+				sb.Append(next);
+				return sb;
+			}).ToString();
 		var dataValueConditionalBranches = data.Members
 			.Where(static m => m.HasData)
-			.Select(m => $"({m.TypeName}){m.Data} => {data.TypeName}.{m.MemberName},")
-			.Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
+			.Select(m => ZString.Concat('(', m.TypeName, ')', m.Data, " => ", data.TypeName, '.', m.MemberName, ','))
+			.Aggregate(sb, static (sb, next) => {
+				sb.Append("\n\t\t\t");
+				sb.Append(next);
+				return sb;
+			}).ToString();
 		var nameDataConditionalBranches = data.Members
 			.Where(static m => m.HasData)
-			.Select(m => $@"""{m.MemberName}"" => ({m.TypeName}){m.Data},")
-			.Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
+			.Select(m => ZString.Concat('"', m.MemberName, "\" => (", m.TypeName, ')', m.Data, ','))
+			.Aggregate(sb, static (sb, next) => {
+				sb.Append("\n\t\t\t");
+				sb.Append(next);
+				return sb;
+			}).ToString();
 		var valueNameConditionalBranches = data.Members
-			.Select(m => $@"{data.TypeName}.{m.MemberName} => ""{m.MemberName}"",")
-			.Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
+			.Select(m => ZString.Concat(data.TypeName, '.', m.MemberName, " => \"", m.MemberName, "\","))
+			.Aggregate(sb, static (sb, next) => {
+				sb.Append("\n\t\t\t");
+				sb.Append(next);
+				return sb;
+			}).ToString();
 		var nameValueConditionalBranches = data.Members
-			.Select(m => $@"""{m.MemberName}"" => {data.TypeName}.{m.MemberName},")
-			.Aggregate("", static (current, next) => current + "\n\t\t\t" + next);
+			.Select(m => ZString.Concat('"', m.MemberName, "\" => ", data.TypeName, '.', m.MemberName, ','))
+			.Aggregate(sb, static (sb, next) => {
+				sb.Append("\n\t\t\t");
+				sb.Append(next);
+				return sb;
+			}).ToString();
 		var inlineAttr = data.Inline ? "[MethodImpl(MethodImplOptions.AggressiveInlining)]" : "";
-		
+
 		var getHashCodeImpl = data.DataTypeName == "short" ||
 													data.DataTypeName == "int" ||
 													data.DataTypeName == "long" ||
@@ -331,7 +375,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 													data.DataTypeName == "byte" ||
 													data.DataTypeName == "sbyte"
 		 											? "(int)obj" : "obj.GetHashCode()";
-		
+
 		var nameValueMapDict = data.UseSwitch ? "" : $$"""
 			private static readonly Dictionary<string, {{data.TypeName}}> NameValueMap = new() {
 				{{nameValueMap}}
@@ -355,16 +399,16 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				{{dataValueMap}}
 			};
 		""";
-		
+
 		var generatedCodeAttr = """
 		[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
 		""";
-		
+
 		var dataMethod = data.UseSwitch ? $$"""
 		{{inlineAttr}}
 			{{generatedCodeAttr}}
-			public static {{data.DataTypeName}} Data(this {{data.TypeName}} self) 
+			public static {{data.DataTypeName}} Data(this {{data.TypeName}} self)
 			=> self switch {
 			{{valueDataConditionalBranches}}
 				_ => throw new DataNotFoundException($"Data of {ValueNameMap[self]} not found.")
@@ -384,7 +428,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var toStringFastMethod = data.UseSwitch ? $$"""
 		{{inlineAttr}}
 			{{generatedCodeAttr}}
-			public static string ToStringFast(this {{data.TypeName}} self) 
+			public static string ToStringFast(this {{data.TypeName}} self)
 			=> self switch {
 			{{valueNameConditionalBranches}}
 				_ => throw new UnreachableException("Never reach here.")
@@ -460,11 +504,11 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				return result;
 			}
 		""";
-		
+
 		var dataKeyEqualMethod = data.DataTypeName == "string"
 			? $"public bool Equals({data.DataTypeName}? x, {data.DataTypeName}? y) => x == y;"
 			: $"public bool Equals({data.DataTypeName} x, {data.DataTypeName} y) => x == y;";
-		
+
 		var valueToDataConverter = data.AllowDuplicate ? "" : $$"""
 		{{generatedCodeAttr}}
 		public sealed class {{formattedTypeName}}ToDataConverter: JsonConverter<{{data.TypeName}}> {
@@ -663,7 +707,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			}
 		}
 		""";
-		
+
 		var valueToNameArrayConverter = $$"""
 		{{generatedCodeAttr}}
 		public sealed class {{formattedTypeName}}ArrayToNameArrayConverter: JsonConverter<{{data.TypeName}}[]> {
@@ -741,7 +785,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			}
 		}
 		""";
-		
+
 		var valueToNameEnumerableConverter = $$"""
 		{{generatedCodeAttr}}
 		public sealed class {{formattedTypeName}}EnumerableToNameEnumerableConverter: JsonConverter<IEnumerable<{{data.TypeName}}>> {
@@ -818,7 +862,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			}
 		}
 		""";
-		
+
 		var source = $$"""
 		// <auto-generated />
 		#nullable enable
@@ -851,17 +895,17 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			{{generatedCodeAttr}}
-			public static bool HasName(this {{data.TypeName}} self, string name) 
+			public static bool HasName(this {{data.TypeName}} self, string name)
 				=> self.ToStringFast() == name;
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			{{generatedCodeAttr}}
-			public static bool HasData(this {{data.TypeName}} self, {{data.DataTypeName}} data) 
+			public static bool HasData(this {{data.TypeName}} self, {{data.DataTypeName}} data)
 				=> self.Data() == data;
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			{{generatedCodeAttr}}
-			public static bool Equals(this {{data.TypeName}} self, {{data.TypeName}} v) 
+			public static bool Equals(this {{data.TypeName}} self, {{data.TypeName}} v)
 				=> self == v;
 
 			{{tryGetDataByNameMethod}}
@@ -870,7 +914,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 
 			{{tryGetValueByDataMethod}}
 		}
-		
+
 		{{generatedCodeAttr}}
 		internal sealed class {{formattedTypeName}}Comparer: IEqualityComparer<{{data.TypeName}}> {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -888,7 +932,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			public int GetHashCode([DisallowNull] {{data.DataTypeName}} obj) => {{getHashCodeImpl}};
 		}
-		
+
 		{{valueToDataConverter}}
 
 		{{valueToDataArrayConverter}}
@@ -902,7 +946,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		{{valueToNameConverter}}
 
 		{{valueToNameArrayConverter}}
-		
+
 		{{nullableValueToNameArrayConverter}}
 
 		{{valueToNameEnumerableConverter}}
@@ -910,9 +954,9 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		{{nullableValueToNameEnumerableConverter}}
 
 		""";
-		ctx.AddSource($"{(data.NamespaceName == "<global namespace>" ? "" : data.NamespaceName[globalLength..])}{data.TypeName[globalLength..]}TaggedEnum.g.cs", SourceText.From(source, Encoding.UTF8));
+		ctx.AddSource(ZString.Concat(data.NamespaceName == "<global namespace>" ? "" : namespaceName, fullTypeName, "TaggedEnum.g.cs"), SourceText.From(source, Encoding.UTF8));
 	}
-	
+
 	private static string PrimitiveTypeToReadJsonType(string type)
 		=> type switch {
 			"byte" => "GetByte()",
@@ -934,29 +978,29 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 
 	private static string PrimitiveTypeToWriteJsonType(string type, string arg)
 		=> type switch {
-			"byte" => $"WriteNumberValue({arg})",
-			"sbyte" => $"WriteNumberValue({arg})",
-			"short" => $"WriteNumberValue({arg})",
-			"int" => $"WriteNumberValue({arg})",
-			"long" => $"WriteNumberValue({arg})",
-			"ushort" => $"WriteNumberValue({arg})",
-			"uint" => $"WriteNumberValue({arg})",
-			"ulong" => $"WriteNumberValue({arg})",
-			"float" => $"WriteNumberValue({arg})",
-			"double" => $"WriteNumberValue({arg})",
-			"decimal" => $"WriteNumberValue({arg})",
-			"char" => $"WriteStringValue(new string({arg}, 1))",
-			"string" => $"WriteStringValue({arg})",
-			"bool" => $"WriteBooleanValue({arg})",
+			"byte" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"sbyte" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"short" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"int" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"long" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"ushort" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"uint" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"ulong" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"float" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"double" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"decimal" => ZString.Concat("WriteNumberValue(", arg, ')'),
+			"char" => ZString.Concat("WriteStringValue(new string(", arg, ", 1))"),
+			"string" => ZString.Concat("WriteStringValue(", arg, ')'),
+			"bool" => ZString.Concat("WriteBooleanValue(", arg, ')'),
 			_ => throw new ArgumentException("Invalid type name.")
 		};
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static string PrimitiveTypeToDeclareType(string type) 
+	private static string PrimitiveTypeToDeclareType(string type)
 		=> type == "string" ? "string?" : type;
-	
+
 	public static string ReaderGetToken(string type)
 		=> type == "string"
-				? $@"reader.GetString() is not {{}} token ? throw new UnreachableException(""JsonTokenType is string but reader.GetString() is null."") : token" 
-				: $"reader.{PrimitiveTypeToReadJsonType(type)}";
+				? $@"reader.GetString() is not {{}} token ? throw new UnreachableException(""JsonTokenType is string but reader.GetString() is null."") : token"
+				: ZString.Concat("reader.", PrimitiveTypeToReadJsonType(type));
 }

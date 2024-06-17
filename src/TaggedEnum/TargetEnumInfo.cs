@@ -31,10 +31,10 @@ internal struct TargetEnumInfo {
 	public string DataTypeName = DefaultType;
 
 	public required string Modifiers { get; init; }
-	
+
 	public IEnumerable<MemberInfo>? Members;
 
 	// public DiagnosticsInfo? DiagnosticsInfo;
-	
+
 	public IEnumerable<Diagnostic>? Diagnostics;
 }

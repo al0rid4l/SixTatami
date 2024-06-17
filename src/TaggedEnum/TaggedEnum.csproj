@@ -21,7 +21,6 @@
     <!-- output target -->
     <TargetFramework>netstandard2.0</TargetFramework>
     <!-- <TargetFramework>net8.0</TargetFramework> -->
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <!-- 输出exe文件名 -->
     <!-- <AssemblyName>$(Exefile)</AssemblyName> -->
@@ -51,9 +50,16 @@
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
     <TransformOutOfDateOnly>True</TransformOutOfDateOnly> -->
+		<!-- TODO -->
     <!-- https://github.com/dotnet/roslyn/issues/52017
-		https://github.com/dotnet/sdk/issues/17775 -->
+		https://github.com/dotnet/sdk/issues/17775
+		https://github.com/dotnet/roslyn/issues/49075
+		https://github.com/NuGet/Home/issues/11725
+		https://github.com/dotnet/roslyn/discussions/47517#discussioncomment-64145
+		https://github.com/dotnet/roslyn-sdk/blob/0313c80ed950ac4f4eef11bb2e1c6d1009b328c4/samples/CSharp/SourceGenerators/SourceGeneratorSamples/SourceGeneratorSamples.csproj#L13-L30
+		https://stackoverflow.com/questions/74915263/c-sharp-source-generator-filenotfoundexception-could-not-load-file-or-assembly -->
     <!-- <GetTargetPathDependsOn>$(GetTargetPathDependsOn);AddGenerationTimeReferences</GetTargetPathDependsOn> -->
+		<GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
   </PropertyGroup>
   <!-- Debug配置 -->
   <PropertyGroup Condition="'$(Configuration)'=='' Or '$(Configuration)'=='DEBUG' or '$(Configuration)'=='Debug'">
@@ -104,12 +110,10 @@
     <DebugType>portable</DebugType>
     <!-- pdb文件位置和名称 -->
     <!-- <PdbFile>$(Exefile)</PdbFile> -->
-    <!-- 将pdb打包到发布内容和主包一起发布 -->
-    <!-- <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder> -->
+    <!-- 将pdb打包到发布内容和主包一起发布, fix paket for symbols, https://github.com/fsprojects/Paket/issues/3685#issuecomment-744373253 -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <!-- 将pdb打包到发布内容作为符号包单独发布 -->
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <!-- fix paket for symbols, https://github.com/fsprojects/Paket/issues/3685#issuecomment-744373253 -->
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <!-- 优化 -->
     <Optimize>true</Optimize>
     <!-- 单文件和selfcontained -->
@@ -171,12 +175,24 @@
   <!-- <ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
 	</ItemGroup> -->
+	<!-- TODO -->
+  <ItemGroup>
+		<PackageReference Include="ZString" Version="2.6.0" GeneratePathProperty="true" PrivateAssets="All"/>
+	</ItemGroup>
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="LICENSE" Pack="true" PackagePath="\" />
     <!-- for source generator -->
     <None Include="$(OutputPath)/$(AssemblyName).dll" Pack="true" PackagePath="analyzers/roslyn$(ROSLYN_VERSION)/dotnet/cs" Visible="false" />
+    <!-- <None Include="$(OutputPath)/RoslynHelper.dll" Pack="true" PackagePath="lib/netstandard2.0/RoslynHelper.dll" Visible="false" /> -->
   </ItemGroup>
+	<!-- TODO -->
+	<!-- <Target Name="GetDependencyTargetPaths" BeforeTargets="GenerateNuspec" AfterTargets="PaketRestore"> -->
+	<Target Name="GetDependencyTargetPaths">
+		<ItemGroup>
+			<TargetPathWithTargetPlatformMoniker Include="$(PKGZString)\lib\netstandard2.0\ZString.dll" IncludeRuntimeDependency="false" />
+		</ItemGroup>
+	</Target>
   <!-- <ItemGroup>
     <ProjectReference Include="../RoslynHelper/RoslynHelper.csproj" />
   </ItemGroup> -->

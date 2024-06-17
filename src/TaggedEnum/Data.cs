@@ -21,6 +21,6 @@ public sealed class Data: Attribute {
 	public Data(object str) {
 		V = str;
 	}
-	
+
 	public Data() {}
 }
