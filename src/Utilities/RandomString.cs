@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
 using SixTatami.DataStructures;
+using SixTatami.Extensions;
 
 namespace SixTatami.Utilities;
 
@@ -170,13 +171,13 @@ public static class RandomString {
 
 	// 此函数比上面非AOT略快, AOT略慢
 	private static string GenerateFast(string charset, int length, Random rnd) {
-		char[] sb = ArrayPool<char>.Shared.Rent(length);
+		using var sharedObject = ArrayPool<char>.Shared.AutoRent(length);
+		var sb = sharedObject.Value;
 
 		for (var i = 0; i < length; ++i) {
 			sb[i] = charset[rnd.Next(charset.Length)];
 		}
 		var result = new string(sb, 0, length);
-		ArrayPool<char>.Shared.Return(sb);
 		return result;
 	}
 
