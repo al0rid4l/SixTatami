@@ -21,8 +21,8 @@
 		<EnablePackageValidation>true</EnablePackageValidation>
 
 		<!-- output target -->
-		<TargetFramework>net8.0</TargetFramework>
-		<!-- <TargetFrameworks>net8.0;netstandard2.1;</TargetFrameworks> -->
+		<TargetFramework>net9.0</TargetFramework>
+		<!-- <TargetFrameworks>net9.0;netstandard2.1;</TargetFrameworks> -->
 		<OutputType>Library</OutputType>
 		<!-- 输出exe文件名 -->
 	  <!-- <AssemblyName>$(Exefile)</AssemblyName> -->
@@ -39,7 +39,7 @@
 		<LangVersion>latest</LangVersion>
 		<!-- 是否开启预览特性 -->
 		<!-- <EnablePreviewFeatures>True</EnablePreviewFeatures> -->
-		
+
 		<!-- 代码质量分析 -->
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<AnalysisMode>Recommended</AnalysisMode>

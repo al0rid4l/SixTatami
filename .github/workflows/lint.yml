@@ -9,7 +9,7 @@ on:
 
 env:
   CI: true
-        
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -25,11 +25,11 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/paket.lock') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-            
+
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: '9.x'
           # 如果直接用nuget+lock文件则可以使用以下配置而不用cache action
           # cache: true
 

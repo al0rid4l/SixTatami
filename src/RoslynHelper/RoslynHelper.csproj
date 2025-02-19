@@ -20,7 +20,7 @@
     <EnablePackageValidation>true</EnablePackageValidation>
     <!-- output target -->
     <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- <TargetFrameworks>net8.0;netstandard2.1;</TargetFrameworks> -->
+    <!-- <TargetFrameworks>net9.0;netstandard2.1;</TargetFrameworks> -->
     <OutputType>Library</OutputType>
     <!-- 输出exe文件名 -->
     <!-- <AssemblyName>$(Exefile)</AssemblyName> -->

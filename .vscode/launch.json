@@ -10,7 +10,7 @@
 			"request": "launch",
 			"preLaunchTask": "build:Extensions",
 			// If you have changed target frameworks, make sure to update the program path.
-			"program": "${workspaceFolder}/src/Extensions/bin/Debug/net8.0/Extensions.dll",
+			"program": "${workspaceFolder}/src/Extensions/bin/Debug/net9.0/Extensions.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}",
 			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
@@ -70,7 +70,7 @@
 			"request": "launch",
 			"preLaunchTask": "build:DataStructures",
 			// If you have changed target frameworks, make sure to update the program path.
-			"program": "${workspaceFolder}/src/DataStructures/bin/Debug/net8.0/DataStructures.dll",
+			"program": "${workspaceFolder}/src/DataStructures/bin/Debug/net9.0/DataStructures.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}",
 			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
@@ -130,7 +130,7 @@
 			"request": "launch",
 			"preLaunchTask": "build:Utilities",
 			// If you have changed target frameworks, make sure to update the program path.
-			"program": "${workspaceFolder}/src/Utilities/bin/Debug/net8.0/Utilities.dll",
+			"program": "${workspaceFolder}/src/Utilities/bin/Debug/net9.0/Utilities.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}",
 			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
@@ -190,7 +190,7 @@
 			"request": "launch",
 			"preLaunchTask": "build:Examples",
 			// If you have changed target frameworks, make sure to update the program path.
-			"program": "${workspaceFolder}/src/Examples/bin/Debug/net8.0/Examples.dll",
+			"program": "${workspaceFolder}/src/Examples/bin/Debug/net9.0/Examples.dll",
 			"args": [],
 			"cwd": "${workspaceFolder}",
 			// For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
