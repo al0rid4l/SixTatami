@@ -5,22 +5,22 @@ namespace SixTatami.Extensions;
 
 public static class DateTimeExtensions {
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static int GetWeekOfYear(this DateTime date) {
+	public static int GetWeekOfYear(ref this DateTime date) {
 		var cal = CultureInfo.InvariantCulture.Calendar;
 		return cal.GetWeekOfYear(date, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static int GetISOWeekNumber(this DateTime date) => ISOWeek.GetWeekOfYear(date);
+	public static int GetISOWeekNumber(ref this DateTime date) => ISOWeek.GetWeekOfYear(date);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DateTime GetStartDateOfWeek(this DateTime date, DayOfWeek startOfWeek = DayOfWeek.Sunday) {
+	public static DateTime GetStartDateOfWeek(ref this DateTime date, DayOfWeek startOfWeek = DayOfWeek.Sunday) {
 		int diff = (7 + date.DayOfWeek - startOfWeek) % 7;
 		return date.AddDays(-diff).Date;
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DateTime GetEndDateOfWeek(this DateTime date, DayOfWeek startOfWeek = DayOfWeek.Sunday) {
+	public static DateTime GetEndDateOfWeek(ref this DateTime date, DayOfWeek startOfWeek = DayOfWeek.Sunday) {
 		int diff = (6 + startOfWeek - date.DayOfWeek) % 7;
 		return date.AddDays(diff).Date;
 	}
@@ -43,7 +43,7 @@ public static class DateTimeExtensions {
 	public static DateTime ToDateTime(int year, int weekNumber, DayOfWeek dayOfWeek) => ISOWeek.ToDateTime(year, weekNumber, dayOfWeek);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DateTime GetStartDateOfMonth(this DateTime date) {
+	public static DateTime GetStartDateOfMonth(ref this DateTime date) {
 		var year = date.Year;
 		var month = date.Month;
 		var day = 1;
@@ -51,7 +51,7 @@ public static class DateTimeExtensions {
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DateTime GetEndDateOfMonth(this DateTime date) {
+	public static DateTime GetEndDateOfMonth(ref this DateTime date) {
 		var year = date.Year;
 		var month = date.Month;
 		var day = DateTime.DaysInMonth(year, month);
@@ -59,10 +59,10 @@ public static class DateTimeExtensions {
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static int GetQuarter(this DateTime date) => (date.Month + 2) / 3;
+	public static int GetQuarter(ref this DateTime date) => (date.Month + 2) / 3;
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DateTime GetStartDateOfQuarter(this DateTime date) {
+	public static DateTime GetStartDateOfQuarter(ref this DateTime date) {
 		var quarter = date.GetQuarter();
 		var startMonth = quarter * 3 - 2;
 		var year = date.Year;
@@ -70,7 +70,7 @@ public static class DateTimeExtensions {
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static DateTime GetEndDateOfQuarter(this DateTime date) {
+	public static DateTime GetEndDateOfQuarter(ref this DateTime date) {
 		var quarter = date.GetQuarter();
 		var endMonth = quarter * 3;
 		var year = date.Year;
