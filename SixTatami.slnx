@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Datastructures/Datastructures.csproj" />
+    <Project Path="src/Examples/Examples.csproj" />
+    <Project Path="src/Extensions/Extensions.csproj" />
+    <Project Path="src/RoslynHelper/RoslynHelper.csproj" />
+    <Project Path="src/TaggedEnum/TaggedEnum.csproj" />
+    <Project Path="src/Utilities/Utilities.csproj" />
+  </Folder>
+</Solution>

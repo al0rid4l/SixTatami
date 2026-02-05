@@ -46,7 +46,7 @@ public static class DateTimeExtensions {
 	public static DateTime GetStartDateOfMonth(ref this DateTime date) {
 		var year = date.Year;
 		var month = date.Month;
-		var day = 1;
+		const int day = 1;
 		return new DateTime(year, month, day);
 	}
 

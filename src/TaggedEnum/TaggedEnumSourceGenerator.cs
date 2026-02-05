@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -7,7 +8,9 @@ using Cysharp.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using static TaggedEnum.Util;
+using SixTatami.RoslynHelper;
+
+using static SixTatami.RoslynHelper.Util;
 
 namespace TaggedEnum;
 
@@ -61,8 +64,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		// 	Debugger.Launch();
 		// }
 
-		Span<string> taggedAttrs = [TaggedAttrName, TaggedGenericAttrName];
-		foreach (var taggedAttrName in taggedAttrs) {
+		foreach (var taggedAttrName in (Span<string>)[TaggedAttrName, TaggedGenericAttrName]) {
 			var taggedProvider = context.SyntaxProvider.ForAttributeWithMetadataName(taggedAttrName,
 				IsEnum,
 				TransformEnumPayload
@@ -163,10 +165,10 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				var location = attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken)
 					.ChildNodes()
 					.OfType<GenericNameSyntax>()
-					.FirstOrDefault()
+					.FirstOrDefault()?
 					.ChildNodes()
 					.OfType<TypeArgumentListSyntax>()
-					.FirstOrDefault()
+					.FirstOrDefault()?
 					.GetLocation();
 				data.Diagnostics = [Diagnostic.Create(Rule1, location)];
 				return data;
@@ -189,7 +191,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var dataType = enumTypeInfo.SemanticModel.Compilation.GetTypeByMetadataName(DataAttrName);
 		var dataGenericType = enumTypeInfo.SemanticModel.Compilation.GetTypeByMetadataName(DataGenericAttrName);
 		var dataset = new Dictionary<string, bool>();
-		var memberDataMap = enumTypeInfo.Symbol.GetMembers()
+		enumTypeInfo.Members = [.. enumTypeInfo.Symbol.GetMembers()
 			.OfType<IFieldSymbol>()
 			.Select((m, _) => {
 				var memberDataAttrData = m.GetAttributesDataByAttribute([dataType!, dataGenericType!]);
@@ -223,15 +225,15 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 								attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken)
 									.ChildNodes()
 									.OfType<GenericNameSyntax>()
-									.FirstOrDefault()
+									.FirstOrDefault()?
 									.ChildNodes()
 									.OfType<TypeArgumentListSyntax>()
-									.FirstOrDefault()
+									.FirstOrDefault()?
 									.GetLocation()
 								: attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken).GetLocation());
 							memberInfo.Diagnostics = locations.Select(static location => Diagnostic.Create(Rule3, location));
 						} else {
-							memberInfo.Data = data.Value is string str ? ZString.Concat('"', str, '"') : data.Value is char c ? ZString.Concat('\'', c, '\'') : data.Value?.ToString().ToLower() ?? string.Empty;
+							memberInfo.Data = data.Value is string str ? ZString.Concat('"', str, '"') : data.Value is char c ? ZString.Concat('\'', c, '\'') : data.Value?.ToString().ToLower(CultureInfo.InvariantCulture) ?? string.Empty;
 							memberInfo.TypeName = dataTypeName;
 							memberInfo.HasData = true;
 						}
@@ -240,10 +242,10 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 							attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken)
 								.ChildNodes()
 								.OfType<GenericNameSyntax>()
-								.FirstOrDefault()
+								.FirstOrDefault()?
 								.ChildNodes()
 								.OfType<TypeArgumentListSyntax>()
-								.FirstOrDefault()
+								.FirstOrDefault()?
 								.GetLocation()
 							: attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken).GetLocation());
 						memberInfo.Diagnostics = locations.Select(static location => Diagnostic.Create(Rule3, location));
@@ -260,10 +262,10 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 							attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken)
 								.ChildNodes()
 								.OfType<AttributeArgumentListSyntax>()
-								.FirstOrDefault()
+								.FirstOrDefault()?
 								.ChildNodes()
 								.OfType<AttributeArgumentSyntax>()
-								.FirstOrDefault()
+								.FirstOrDefault()?
 								.GetLocation()
 							);
 						memberInfo.Diagnostics = locations.Select(static location => Diagnostic.Create(Rule5, location));
@@ -272,9 +274,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 					}
 				}
 				return memberInfo;
-			}).ToArray();
-
-		enumTypeInfo.Members = memberDataMap;
+			})];
 		return enumTypeInfo;
 	}
 
@@ -400,7 +400,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			};
 		""";
 
-		var generatedCodeAttr = """
+		const string generatedCodeAttr = """
 		[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("TaggedEnum", "1.0")]
 		""";

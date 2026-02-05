@@ -1,9 +1,7 @@
-using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
 using SixTatami.DataStructures;
-using SixTatami.Extensions;
 
 namespace SixTatami.Utilities;
 
@@ -25,17 +23,17 @@ public static class CharsetTypeExtensions {
 	private const string Symbols = @"!@#$%^&*()-=_+[]{}\|;':"",./<>?`~";
 
 	// NOTE 所有预定义字符串总长度,新增则需要修改此数
-	private const int TotalCharsetLength = 116;
+	// private const int TotalCharsetLength = 116;
 
-	private static readonly string[] _CharsetTypeMap = [Numbers, AlphabetLower, AlphabetUpper, HexLower, HexUpper, Octal, Binary, Symbols];
+	private static readonly string[] s_charsetTypeMap = [Numbers, AlphabetLower, AlphabetUpper, HexLower, HexUpper, Octal, Binary, Symbols];
 
 	private static int ResolvingPerformanceDegradation(ref StackArray8<string> charsets, CharsetType types) {
 		var charsetCount = 0;
 
-		for (int i = 0; i < _CharsetTypeMap.Length; ++i) {
+		for (int i = 0; i < s_charsetTypeMap.Length; ++i) {
 			var flag = (byte)types & (1 << i);
 			if ((CharsetType)flag != CharsetType.None) {
-				charsets[charsetCount++] = _CharsetTypeMap[(int)Math.Log2(flag)];
+				charsets[charsetCount++] = s_charsetTypeMap[(int)Math.Log2(flag)];
 			}
 		}
 
@@ -170,16 +168,16 @@ public static class RandomString {
 	// }
 
 	// 此函数比上面非AOT略快, AOT略慢
-	private static string GenerateFast(string charset, int length, Random rnd) {
-		using var sharedObject = ArrayPool<char>.Shared.AutoRent(length);
-		var sb = sharedObject.Value;
-
-		for (var i = 0; i < length; ++i) {
-			sb[i] = charset[rnd.Next(charset.Length)];
-		}
-		var result = new string(sb, 0, length);
-		return result;
-	}
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	private static string GenerateFast(string charset, int length, Random rnd)
+		=> string.Create(length, (charset, rnd), static (span, state) => {
+			var (charset, rnd) = state;
+			var strLen = span.Length;
+			var charsetLen = charset.Length;
+			for (var i = 0; i < strLen; ++i) {
+				span[i] = charset[rnd.Next(charsetLen)];
+			}
+		});
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static string GenerateFast(string charset, int length = 10) => GenerateFast(charset, length, new());

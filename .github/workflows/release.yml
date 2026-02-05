@@ -64,7 +64,7 @@ jobs:
 
       - name: Pack Utilities
         if: steps.changes.outputs.Utilities == 'true'
-        run: dotnet pack src/Utilities/Utilities.csproj --include-symbols -c Release
+        run: dotnet pack src/Utilities/Utilities.csproj --include-symbols --no-build
 
       - name: Publish Utilities
         if: steps.changes.outputs.Utilities == 'true'
@@ -76,7 +76,7 @@ jobs:
 
       - name: Pack Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
-        run: dotnet pack src/Datastructures/Datastructures.csproj --include-symbols -c Release
+        run: dotnet pack src/Datastructures/Datastructures.csproj --include-symbols --no-build
 
       - name: Publish Datastructures
         if: steps.changes.outputs.Datastructures == 'true'
@@ -88,7 +88,7 @@ jobs:
 
       - name: Pack Extensions
         if: steps.changes.outputs.Extensions == 'true'
-        run: dotnet pack src/Extensions/Extensions.csproj --include-symbols -c Release
+        run: dotnet pack src/Extensions/Extensions.csproj --include-symbols --no-build
 
       - name: Publish Extensions
         if: steps.changes.outputs.Extensions == 'true'
@@ -100,7 +100,7 @@ jobs:
 
       - name: Pack TaggedEnum
         if: steps.changes.outputs.TaggedEnum == 'true'
-        run: dotnet pack src/TaggedEnum/TaggedEnum.csproj --include-symbols -c Release
+        run: dotnet pack src/TaggedEnum/TaggedEnum.csproj --include-symbols --no-build
 
       - name: Publish TaggedEnum
         if: steps.changes.outputs.TaggedEnum == 'true'
@@ -112,7 +112,7 @@ jobs:
 
       - name: Pack RoslynHelper
         if: steps.changes.outputs.RoslynHelper == 'true'
-        run: dotnet pack src/RoslynHelper/RoslynHelper.csproj --include-symbols -c Release
+        run: dotnet pack src/RoslynHelper/RoslynHelper.csproj --include-symbols --no-build
 
       - name: Publish RoslynHelper
         if: steps.changes.outputs.RoslynHelper == 'true'
@@ -169,7 +169,7 @@ jobs:
   #     - name: Pack Utilities
   #       if: steps.changes.outputs.Utilities == 'true'
   #       shell: pwsh
-  #       run: dotnet pack src/Utilities/Utilities.csproj --include-symbols -c Release
+  #       run: dotnet pack src/Utilities/Utilities.csproj --include-symbols --no-build
 
   #     - name: Publish Utilities
   #       if: steps.changes.outputs.Utilities == 'true'
@@ -184,7 +184,7 @@ jobs:
   #     - name: Pack Datastructures
   #       if: steps.changes.outputs.Datastructures == 'true'
   #       shell: pwsh
-  #       run: dotnet pack src/Datastructures/Datastructures.csproj --include-symbols -c Release
+  #       run: dotnet pack src/Datastructures/Datastructures.csproj --include-symbols --no-build
 
   #     - name: Publish Datastructures
   #       if: steps.changes.outputs.Datastructures == 'true'
@@ -199,7 +199,7 @@ jobs:
   #     - name: Pack Extensions
   #       if: steps.changes.outputs.Extensions == 'true'
   #       shell: pwsh
-  #       run: dotnet pack src/Extensions/Extensions.csproj --include-symbols -c Release
+  #       run: dotnet pack src/Extensions/Extensions.csproj --include-symbols --no-build
 
   #     - name: Publish Extensions
   #       if: steps.changes.outputs.Extensions == 'true'

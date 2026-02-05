@@ -43,9 +43,9 @@ Console.WriteLine("Book0Extension");
 Console.WriteLine(ExamplesBook0Extension.TryGetDataByName("CSAPP", out var v));
 Console.WriteLine(v);
 Console.WriteLine(ExamplesBook0Extension.TryGetValueByName("CSAPP", out var vv));
-Console.WriteLine((int)vv);
+Console.WriteLine((int)vv!);
 Console.WriteLine(ExamplesBook0Extension.TryGetValueByData("Computer Systems: A Programmer's Perspective", out var vvv));
-Console.WriteLine((int)vvv);
+Console.WriteLine((int)vvv!);
 
 var options = new JsonSerializerOptions() {
 	IncludeFields = true
@@ -68,7 +68,7 @@ var str = $$"""
 }
 """;
 
-var obj = JsonSerializer.Deserialize<JsonTest>(str, options);
+var obj = JsonSerializer.Deserialize<JsonTest>(str, options)!;
 Console.WriteLine(obj.V1);
 
 

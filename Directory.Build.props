@@ -1,0 +1,89 @@
+<Project>
+	<PropertyGroup>
+		<!-- 包信息 -->
+		<Authors>al0rid4l</Authors>
+		<Company>com.al0rid4l</Company>
+		<RepositoryUrl>https://github.com/al0rid4l/SixTatami</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/al0rid4l/SixTatami</PackageProjectUrl>
+
+		<!-- 启用包验证 -->
+		<EnablePackageValidation>true</EnablePackageValidation>
+
+		<!-- output target -->
+		<TargetFramework>net10.0</TargetFramework>
+
+    <!-- 预处理器符号定义 -->
+    <DefineConstants Condition="$(RuntimeIdentifier.Contains('win'))">WINDOWS</DefineConstants>
+    <DefineConstants Condition="$(RuntimeIdentifier.Contains('linux'))">$(DefineConstants);LINUX</DefineConstants>
+
+		<!-- 编译器选项 -->
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>latest</LangVersion>
+		<!-- 是否开启预览特性 -->
+		<EnablePreviewFeatures>True</EnablePreviewFeatures>
+
+		<!-- 代码质量分析 -->
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<AnalysisLevel>latest-recommended</AnalysisLevel>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <NoWarn>CA1051,CA1725,CA2211,CA1710,RCS1158,CA1000</NoWarn>
+		<!-- 在构建时执行代码风格检查,对于依赖了源生成器的项目应该关闭否则导致源生成器生成的代码构建不通过 -->
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+		<!-- for symbols -->
+		<RepositoryType>git</RepositoryType>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>portable</DebugType>
+
+		<!-- lockfile -->
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+		<RestoreLockedMode>true</RestoreLockedMode>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='' Or '$(Configuration)'=='DEBUG' or '$(Configuration)'=='Debug'">
+		<!-- 编译器选项 -->
+		<CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+		<!-- 预处理器符号定义 -->
+    <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
+		<!-- 复制所有依赖项的pdb到构建产物目录 -->
+    <CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
+		<!-- 关掉优化 -->
+    <Optimize>false</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='RELEASE' or '$(Configuration)'=='Release'">
+		<!-- 编译器选项 -->
+		<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+		<!-- 预处理器符号定义 -->
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+
+		<!-- 代码质量分析 -->
+		<!-- 将警告作为error方便CI检查代码不通过及时终止 -->
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+		<!-- 用于非库项目 -->
+		<!-- <PublishReadyToRunEmitSymbols>true</PublishReadyToRunEmitSymbols> -->
+    <!-- 优化 -->
+    <Optimize>true</Optimize>
+		<!-- for snupkg -->
+		<IncludeSymbols>true</IncludeSymbols>
+		<!-- for snupkg -->
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<!-- for sourcelink -->
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<!-- for sourcelink -->
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+		<!-- 生成确定性输出 -->
+		<!-- Github Action中默认环境变量CI为true,也可以使用GITHUB_ACTIONS,也默认为true,不过CI更加可移植一些 -->
+		<Deterministic Condition="$(CI)=='true'">true</Deterministic>
+		<ContinuousIntegrationBuild Condition="$(CI)=='true'">true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
+	<!-- for sourcelink, .NET8以上sdk自带 -->
+	<!-- <ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+	</ItemGroup> -->
+</Project>

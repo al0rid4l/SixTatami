@@ -1,18 +1,18 @@
 namespace SixTatami.Extensions;
 
 public static class IEnumerableExtensions {
-	public static IEnumerable<T> ForEach<T>(this IEnumerable<T> ien, Action<T> cb) {
-		foreach (var item in ien) {
+	public static IEnumerable<T> ForEach<T>(this IEnumerable<T> self, Action<T> cb) where T: class {
+		foreach (var item in self) {
 			cb(item);
 		}
-		return ien;
+		return self;
 	}
 
-	public static IEnumerable<T> ForEach<T>(this IEnumerable<T> ien, Action<T, int> cb) {
+	public static IEnumerable<T> ForEach<T>(this IEnumerable<T> self, Action<T, int> cb) where T: class {
 		var i = 0;
-		foreach (var item in ien) {
+		foreach (var item in self) {
 			cb(item, i++);
 		}
-		return ien;
+		return self;
 	}
 }

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "SixTatami.DataStructures": {
+        "type": "Project"
+      },
+      "SixTatami.Utilities": {
+        "type": "Project",
+        "dependencies": {
+          "SixTatami.DataStructures": "[0.1.1, )"
+        }
+      },
+      "taggedenum": {
+        "type": "Project"
+      }
+    }
+  }
+}
