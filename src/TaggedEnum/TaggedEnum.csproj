@@ -22,12 +22,12 @@
     <!-- <AssemblyName>$(Exefile)</AssemblyName> -->
     <!-- 输出目录 -->
     <!-- <OutputPath>Test\</OutputPath> -->
-    <!-- TODO 如果源生成器产物不作为运行时依赖(即源生成器的dll不会在项目运行时被用到,比如仅作为分析器)则应当开启下面配置 -->
+    <!-- 如果源生成器产物不作为运行时依赖(即源生成器的dll不会在项目运行时被用到,比如仅作为分析器)则应当开启下面配置 -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
-		<!-- TODO 在构建时执行代码风格检查,对于依赖了源生成器的项目应该关闭否则导致源生成器生成的代码构建不通过 -->
+		<!-- 在构建时执行代码风格检查,对于依赖了源生成器的项目应该关闭否则导致源生成器生成的代码构建不通过 -->
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
-		<!-- TODO for SourceGenerators -->
+		<!-- for SourceGenerators -->
     <!-- https://github.com/dotnet/roslyn/issues/52017
 		https://github.com/dotnet/sdk/issues/17775
 		https://github.com/dotnet/roslyn/issues/49075
