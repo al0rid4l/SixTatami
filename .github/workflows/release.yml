@@ -37,13 +37,17 @@ jobs:
         # 如果使用nuget+lock则使用以下命令
         # run: dotnet restore --locked-mode
 
+      - name: Get prev commit
+        id: vars
+        run: echo "prev_sha=$(git rev-parse HEAD~1)" >> $GITHUB_OUTPUT
+
       # - name: Run lint
       #   run: TODO
       - name: Filter Path
         uses: dorny/paths-filter@v3
         id: changes
         with:
-          base: 'HEAD~1'
+          base: ${{ steps.vars.outputs.prev_sha }}
           filters: |
             Utilities:
               - 'src/Utilities/**'
