@@ -4,7 +4,7 @@
   <PropertyGroup>
     <!-- 包信息 -->
 		<PackageId>SixTatami.Utilities</PackageId>
-		<Version>0.3.3</Version>
+		<Version>0.3.4</Version>
 		<!-- <PackageIcon>TODO</PackageIcon> -->
 		<Title>SixTatami.Utilities</Title>
 		<!-- 项目类型,DotnetTool,Dependency -->
