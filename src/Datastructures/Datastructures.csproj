@@ -4,7 +4,7 @@
   <PropertyGroup>
     <!-- 包信息 -->
 		<PackageId>SixTatami.DataStructures</PackageId>
-		<Version>0.1.2</Version>
+		<Version>0.1.3</Version>
 		<!-- <PackageIcon>TODO</PackageIcon> -->
 		<Title>SixTatami.DataStructures</Title>
 		<!-- 项目类型,DotnetTool,Dependency -->
