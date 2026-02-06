@@ -46,8 +46,6 @@
     <!-- pdb文件位置和名称 -->
     <!-- <PdbFile>$(Exefile)</PdbFile> -->
 
- 		<IsAotCompatible>true</IsAotCompatible>
-		<IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <Target Name="MSBuildLog" AfterTargets="Build">
