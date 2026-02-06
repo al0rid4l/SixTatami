@@ -14,32 +14,62 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Use Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/paket.lock') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
 
       - name: Install .NET
-        uses: actions/setup-dotnet@v4
+        uses: fast-actions/setup-dotnet@v1
         with:
-          dotnet-version: '9.x'
+          sdk-version: 'latest'
           # 如果直接用nuget+lock文件则可以使用以下配置而不用cache action
           # cache: true
 
-      - name: Install Paket
-        run: dotnet tool install -g paket
-
       - name: Install Dependencies
-        run: paket install
+        run: dotnet restore 
         # 如果使用nuget+lock则使用以下命令
         # run: dotnet restore --locked-mode
 
-      # - name: Run lint
-      #   run: TODO
+      - name: Filter Path
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            Utilities:
+              - 'src/Utilities/**'
+            Datastructures:
+              - 'src/Datastructures/**'
+            Extensions:
+              - 'src/Extensions/**'
+            TaggedEnum:
+              - 'src/TaggedEnum/**'
+            RoslynHelper:
+              - 'src/RoslynHelper/**'
+
+      - name: Build Utilities
+        if: steps.changes.outputs.Utilities == 'true'
+        run: ./build.sh -z 1 -c src/Utilities/Utilities.csproj
+
+      - name: Build Datastructures
+        if: steps.changes.outputs.Datastructures == 'true'
+        run: ./build.sh -z 1 -c src/Datastructures/Datastructures.csproj
+
+      - name: Build Extensions
+        if: steps.changes.outputs.Extensions == 'true'
+        run: ./build.sh -z 1 -c src/Extensions/Extensions.csproj
+
+      - name: Build TaggedEnum
+        if: steps.changes.outputs.TaggedEnum == 'true'
+        run: ./build.sh -z 1 -c src/TaggedEnum/TaggedEnum.csproj
+
+      - name: Build RoslynHelper
+        if: steps.changes.outputs.RoslynHelper == 'true'
+        run: ./build.sh -z 1 -c src/RoslynHelper/RoslynHelper.csproj

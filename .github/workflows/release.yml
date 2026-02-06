@@ -13,30 +13,27 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Use Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/paket.lock') }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
 
       - name: Install .NET
-        uses: actions/setup-dotnet@v4
+        uses: fast-actions/setup-dotnet@v1
         with:
-          dotnet-version: '9.x'
+          sdk-version: 'latest'
           # 如果直接用nuget+lock文件则可以使用以下配置而不用cache action
           # cache: true
 
-      - name: Install Paket
-        run: dotnet tool install -g paket
-
       - name: Install Dependencies
-        run: paket install
+        run: dotnet restore
         # 如果使用nuget+lock则使用以下命令
         # run: dotnet restore --locked-mode
 
