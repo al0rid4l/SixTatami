@@ -38,7 +38,7 @@
 		https://stackoverflow.com/questions/74915263/c-sharp-source-generator-filenotfoundexception-could-not-load-file-or-assembly -->
 		<!-- <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths;GetProjectRefDllPath</GetTargetPathDependsOn> -->
 
-    <NoWarn>$(NoWarn);CA1805,RS2000,NU5128</NoWarn>
+    <NoWarn>$(NoWarn);CA1805,RS2000,RS2008,NU5128</NoWarn>
 
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
