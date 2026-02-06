@@ -42,6 +42,7 @@ jobs:
         uses: dorny/paths-filter@v3
         id: changes
         with:
+          base: 'HEAD~1'
           filters: |
             Utilities:
               - 'src/Utilities/**'
