@@ -34,7 +34,7 @@ jobs:
           # cache: true
 
       - name: Install Dependencies
-        run: dotnet restore
+        run: dotnet restore -p:Configuration=Release
         # 如果使用nuget+lock则使用以下命令
         # run: dotnet restore --locked-mode
 
