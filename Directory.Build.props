@@ -38,7 +38,6 @@
 		<DebugType>portable</DebugType>
 
 		<!-- lockfile -->
-		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 		<RestoreLockedMode>true</RestoreLockedMode>
 	</PropertyGroup>
 
@@ -80,6 +79,9 @@
 		<!-- Github Action中默认环境变量CI为true,也可以使用GITHUB_ACTIONS,也默认为true,不过CI更加可移植一些 -->
 		<Deterministic Condition="$(CI)=='true'">true</Deterministic>
 		<ContinuousIntegrationBuild Condition="$(CI)=='true'">true</ContinuousIntegrationBuild>
+
+		<!-- lockfile, TODO nuget的restore -use-lock-file在DEBUG和RELEASE模式下计算的依赖版本不一致,等修复了再把此项拿到上面去 -->
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 	</PropertyGroup>
 
 	<!-- for sourcelink, .NET8以上sdk自带 -->

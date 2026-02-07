@@ -4,7 +4,7 @@
   <PropertyGroup>
     <!-- 包信息 -->
 		<PackageId>TaggedEnum</PackageId>
-		<Version>1.10.1</Version>
+		<Version>1.10.2</Version>
 		<!-- <PackageIcon>TaggedEnum</PackageIcon> -->
 		<Title>TaggedEnum</Title>
 		<!-- 项目类型,DotnetTool,Dependency -->
@@ -30,7 +30,8 @@
 		<!-- TODO 如果pack报错可能需要关闭包验证 -->
 		<!-- <EnablePackageValidation>false</EnablePackageValidation> -->
 
-		<!-- for SourceGenerators -->
+
+		<!-- TODO for SourceGenerators -->
     <!-- https://github.com/dotnet/roslyn/issues/52017
 		https://github.com/dotnet/sdk/issues/17775
 		https://github.com/dotnet/roslyn/issues/49075
@@ -41,7 +42,7 @@
 		https://stackoverflow.com/questions/74915263/c-sharp-source-generator-filenotfoundexception-could-not-load-file-or-assembly -->
 		<!-- <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths;GetProjectRefDllPath</GetTargetPathDependsOn> -->
 
-    <NoWarn>$(NoWarn);CA1805,RS2000,RS2008,NU5128</NoWarn>
+    <NoWarn>$(NoWarn);CA1805,RS2000,RS2008,NU5128,NU5118</NoWarn>
 
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
@@ -70,7 +71,7 @@
 		<IncludeSymbols>false</IncludeSymbols>
   </PropertyGroup>
 
-  <Target Name="MSBuildLog">
+  <Target Name="MSBuildLog" AfterTargets="Build">
     <Message Text="$(Arch)" />
     <Message Text="$(RID)" />
     <Message Text="$(Configuration)" />
@@ -101,19 +102,26 @@
     <None Include="LICENSE" Pack="true" PackagePath="\" />
 		<!-- for icon -->
 		<!-- <None Include="images\icon.png" Pack="true" PackagePath="\"/> -->
-		<!-- for source generator -->
-		<None Include="$(OutputPath)/$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 		<None Include="$(PKGZString)\lib\netstandard2.0\ZString.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
+	<!-- for source generator -->
+	<Target Name="PackProjectAndRefDll" BeforeTargets="_GetPackageFiles">
+		<MSBuild Projects="..\RoslynHelper\RoslynHelper.csproj" Targets="GetTargetPath">
+			<Output TaskParameter="TargetOutputs" ItemName="_RoslynHelper_OutputItem" />
+		</MSBuild>
+		<ItemGroup>
+			<None Include="$(TargetDir)$(TargetName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+			<None Include="@(_RoslynHelper_OutputItem)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		</ItemGroup>
+	</Target>
+
 	<Target Name="GetProjectRefDllPath" BeforeTargets="GenerateNuspec;GetTargetPath">
 		<MSBuild Projects="..\RoslynHelper\RoslynHelper.csproj" Targets="GetTargetPath">
 			<Output TaskParameter="TargetOutputs" ItemName="_RoslynHelper_OutputItem" />
 		</MSBuild>
 		<ItemGroup>
-			<None Include="@(_RoslynHelper_OutputItem)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 			<TargetPathWithTargetPlatformMoniker Include="@(_RoslynHelper_OutputItem)" IncludeRuntimeDependency="false" />
 			<TargetPathWithTargetPlatformMoniker Include="$(PKGZString)\lib\netstandard2.0\ZString.dll" IncludeRuntimeDependency="false" />
 		</ItemGroup>
-		<Message Importance="High" Text="Injecting RoslynHelper for Pack: @(_RoslynHelper_OutputItem)" />
 	</Target>
 </Project>
