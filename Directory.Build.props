@@ -61,6 +61,7 @@
 		<!-- 代码质量分析 -->
 		<!-- 将警告作为error方便CI检查代码不通过及时终止 -->
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 
 		<!-- 用于非库项目 -->
 		<!-- <PublishReadyToRunEmitSymbols>true</PublishReadyToRunEmitSymbols> -->
