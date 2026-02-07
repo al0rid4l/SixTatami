@@ -4,7 +4,7 @@
   <PropertyGroup>
     <!-- 包信息 -->
 		<PackageId>TaggedEnum</PackageId>
-		<Version>1.9.0</Version>
+		<Version>1.10.0</Version>
 		<!-- <PackageIcon>TaggedEnum</PackageIcon> -->
 		<Title>TaggedEnum</Title>
 		<!-- 项目类型,DotnetTool,Dependency -->
@@ -68,7 +68,6 @@
 		<!-- 如果生成snupkg则会导致pack的时候寻找/lib但找不到而报错,所以需要embedded而不生成snupkg -->
 		<DebugType>embedded</DebugType>
 		<IncludeSymbols>false</IncludeSymbols>
-
   </PropertyGroup>
 
   <Target Name="MSBuildLog">
