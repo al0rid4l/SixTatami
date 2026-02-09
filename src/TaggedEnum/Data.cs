@@ -1,11 +1,10 @@
-namespace TaggedEnum;
-
+#pragma warning disable CA1050 // Declare types in namespaces
 [AttributeUsage(
 	AttributeTargets.Field,
 	Inherited = false,
 	AllowMultiple = false
 	)]
-public sealed class Data<TValue>(TValue v): Attribute {
+internal sealed class Data<TValue>(TValue v): Attribute {
 	public TValue V { get; private set; } = v;
 }
 
@@ -15,7 +14,7 @@ public sealed class Data<TValue>(TValue v): Attribute {
 	AllowMultiple = false
 	)]
 // TValue default is string
-public sealed class Data: Attribute {
+internal sealed class Data: Attribute {
 	public object? V { get; }
 
 	public Data(object str) {
@@ -24,3 +23,4 @@ public sealed class Data: Attribute {
 
 	public Data() {}
 }
+#pragma warning restore CA1050 // Declare types in namespaces
