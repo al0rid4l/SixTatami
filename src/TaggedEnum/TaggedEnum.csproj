@@ -4,7 +4,7 @@
   <PropertyGroup>
     <!-- 包信息 -->
 		<PackageId>TaggedEnum</PackageId>
-		<Version>1.10.2</Version>
+		<Version>1.10.3</Version>
 		<!-- <PackageIcon>TaggedEnum</PackageIcon> -->
 		<Title>TaggedEnum</Title>
 		<!-- 项目类型,DotnetTool,Dependency -->
@@ -23,7 +23,7 @@
     <!-- 输出目录 -->
     <!-- <OutputPath>Test\</OutputPath> -->
     <!-- 如果源生成器产物不作为运行时依赖(即源生成器的dll不会在项目运行时被用到,比如仅作为分析器)则应当开启下面配置 -->
-    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
 		<!-- 在构建时执行代码风格检查,对于依赖了源生成器的项目应该关闭否则导致源生成器生成的代码构建不通过 -->
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
