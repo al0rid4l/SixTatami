@@ -4,7 +4,7 @@
   <PropertyGroup>
     <!-- 包信息 -->
 		<PackageId>TaggedEnum</PackageId>
-		<Version>1.11.0</Version>
+		<Version>1.12.0</Version>
 		<!-- <PackageIcon>TaggedEnum</PackageIcon> -->
 		<Title>TaggedEnum</Title>
 		<!-- 项目类型,DotnetTool,Dependency -->
@@ -100,6 +100,8 @@
 		<EmbeddedResource Include="Data.cs" />
 		<Compile Update="Tagged.cs" />
 		<EmbeddedResource Include="Tagged.cs" />
+		<Compile Update="DataNotFoundException.cs" />
+		<EmbeddedResource Include="DataNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />

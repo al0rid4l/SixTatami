@@ -68,6 +68,8 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		{ReadResource(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.Data.cs")}
 
 		{ReadResource(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.Tagged.cs")}
+
+		{ReadResource(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.DataNotFoundException.cs")}
 		""";
 
 	public void Initialize(IncrementalGeneratorInitializationContext context) {
