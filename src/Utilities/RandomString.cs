@@ -40,41 +40,44 @@ public static class CharsetTypeExtensions {
 		return charsetCount;
 	}
 
-	// TODO 扩展方法不支持getter
-	public static string Value(this CharsetType self) {
-		Span<(CharsetType remove, CharsetType duplicate)> patterns = [
-			(~CharsetType.Binary, CharsetType.Numbers | CharsetType.Binary),
-			(~CharsetType.Octal, CharsetType.Numbers | CharsetType.Octal),
-			(~CharsetType.Binary, CharsetType.Octal | CharsetType.Binary),
-			((~CharsetType.Binary) & (~CharsetType.Octal), CharsetType.Octal | CharsetType.Binary | CharsetType.Numbers),
-			(~CharsetType.HexLower, CharsetType.AlphabetLower | CharsetType.HexLower),
-			(~CharsetType.HexUpper, CharsetType.AlphabetUpper | CharsetType.HexUpper),
-		];
+	extension(CharsetType self) {
+		public string Value {
+			get {
+				Span<(CharsetType remove, CharsetType duplicate)> patterns = [
+					(~CharsetType.Binary, CharsetType.Numbers | CharsetType.Binary),
+					(~CharsetType.Octal, CharsetType.Numbers | CharsetType.Octal),
+					(~CharsetType.Binary, CharsetType.Octal | CharsetType.Binary),
+					((~CharsetType.Binary) & (~CharsetType.Octal), CharsetType.Octal | CharsetType.Binary | CharsetType.Numbers),
+					(~CharsetType.HexLower, CharsetType.AlphabetLower | CharsetType.HexLower),
+					(~CharsetType.HexUpper, CharsetType.AlphabetUpper | CharsetType.HexUpper),
+				];
 
-		Span<char> result = stackalloc char[128];
-		var charsets = new StackArray8<string>();
-		var offset = 0;
+				Span<char> result = stackalloc char[128];
+				var charsets = new StackArray8<string>();
+				var offset = 0;
 
-		for (var i = 0; i < patterns.Length; ++i) {
-			var (remove, duplicate) = patterns[i];
-			if ((self & duplicate) == duplicate) {
-				self &= remove;
+				for (var i = 0; i < patterns.Length; ++i) {
+					var (remove, duplicate) = patterns[i];
+					if ((self & duplicate) == duplicate) {
+						self &= remove;
+					}
+				}
+
+				// 虽然可以TotalCharsetLength,但128内存对齐肯定没问题,免得出些奇怪问题
+				// Span<char> result = stackalloc char[TotalCharsetLength];
+				var charsetCount = ResolvingPerformanceDegradation(ref charsets, self);
+
+				for (int i = 0; i < charsetCount; ++i) {
+					var charset = charsets[i];
+					var len = charset.Length;
+					var span = result.Slice(offset, len);
+					charset.CopyTo(span);
+					offset += len;
+				}
+
+				return result[..offset].ToString();
 			}
 		}
-
-		// 虽然可以TotalCharsetLength,但128内存对齐肯定没问题,免得出些奇怪问题
-		// Span<char> result = stackalloc char[TotalCharsetLength];
-		var charsetCount = ResolvingPerformanceDegradation(ref charsets, self);
-
-		for (int i = 0; i < charsetCount; ++i) {
-			var charset = charsets[i];
-			var len = charset.Length;
-			var span = result.Slice(offset, len);
-			charset.CopyTo(span);
-			offset += len;
-		}
-
-		return result[..offset].ToString();
 	}
 
 	// 天知道为什么这段代码会和上面相差慢十倍
@@ -141,7 +144,7 @@ public static class RandomString {
 	public static string GenerateSafe(string charset, int length = 10) => RandomNumberGenerator.GetString(charset, length);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string GenerateSafe(CharsetType charset = CharsetType.AlphabetLower, int length = 10) => GenerateSafe(charset.Value(), length);
+	public static string GenerateSafe(CharsetType charset = CharsetType.AlphabetLower, int length = 10) => GenerateSafe(charset.Value, length);
 
 	public static string GenerateSafeRandomLength(string charset, int minLength = 5, int maxLength = 10) {
 		if (minLength < 0 || maxLength < 0 || minLength > maxLength) {
@@ -153,7 +156,7 @@ public static class RandomString {
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string GenerateSafeRandomLength(CharsetType charset = CharsetType.AlphabetLower, int minLength = 5, int maxLength = 10) => GenerateSafeRandomLength(charset.Value(), minLength, maxLength);
+	public static string GenerateSafeRandomLength(CharsetType charset = CharsetType.AlphabetLower, int minLength = 5, int maxLength = 10) => GenerateSafeRandomLength(charset.Value, minLength, maxLength);
 
 	// unsafe
 	// [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -183,7 +186,7 @@ public static class RandomString {
 	public static string GenerateFast(string charset, int length = 10) => GenerateFast(charset, length, new());
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string GenerateFast(CharsetType charset = CharsetType.AlphabetLower, int length = 10) => GenerateFast(charset.Value(), length);
+	public static string GenerateFast(CharsetType charset = CharsetType.AlphabetLower, int length = 10) => GenerateFast(charset.Value, length);
 
 	public static string GenerateFastRandomLength(string charset, int minLength = 5, int maxLength = 10) {
 		if (minLength > maxLength) {
@@ -197,7 +200,7 @@ public static class RandomString {
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string GenerateFastRandomLength(CharsetType charset = CharsetType.AlphabetLower, int minLength = 5, int maxLength = 10) => GenerateFastRandomLength(charset.Value(), minLength, maxLength);
+	public static string GenerateFastRandomLength(CharsetType charset = CharsetType.AlphabetLower, int minLength = 5, int maxLength = 10) => GenerateFastRandomLength(charset.Value, minLength, maxLength);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static string GenerateHexStringFast(int length = 8, bool lowerCase = false) => lowerCase ? GenerateFast(CharsetType.HexLower, length) : GenerateFast(CharsetType.HexUpper, length);
