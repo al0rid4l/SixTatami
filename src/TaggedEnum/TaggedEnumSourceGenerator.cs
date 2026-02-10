@@ -428,22 +428,31 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		""";
 
 		var dataMethod = data.UseSwitch ? $$"""
-		{{inlineAttr}}
-			{{generatedCodeAttr}}
-			public static {{data.DataTypeName}} Data(this {{data.TypeName}} self)
-			=> self switch {
-			{{valueDataConditionalBranches}}
-				_ => throw new DataNotFoundException($"Data of {ValueNameMap[self]} not found.")
-			};
-		""" : $$"""
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			{{generatedCodeAttr}}
-			public static {{data.DataTypeName}} Data(this {{data.TypeName}} self) {
-				if (ValueDataMap.TryGetValue(self, out var data)) {
-					return data;
-				} else {
-					throw new DataNotFoundException($"Data of {ValueNameMap[self]} not found.");
+				public {{data.DataTypeName}} Data {
+					{{inlineAttr}}
+					{{generatedCodeAttr}}
+					get =>
+						self switch {
+						{{valueDataConditionalBranches}}
+							_ => throw new DataNotFoundException($"Data of {ValueNameMap[self]} not found.")
+						};
 				}
+		""" : $$"""
+			public {{data.DataTypeName}} Data {
+				[MethodImpl(MethodImplOptions.AggressiveInlining)]
+				{{generatedCodeAttr}}
+				get {
+					if (ValueDataMap.TryGetValue(self, out var data)) {
+						return data;
+					} else {
+						throw new DataNotFoundException($"Data of {ValueNameMap[self]} not found.");
+					}
+				}
+			}
+		""";
+		dataMethod = $$"""
+			extension({{data.TypeName}} self) {
+			{{dataMethod}}
 			}
 		""";
 
@@ -548,7 +557,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			}
 
 			public override void Write(Utf8JsonWriter writer, {{data.TypeName}} value, JsonSerializerOptions options) {
-				writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "value.Data()")}};
+				writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "value.Data")}};
 			}
 		}
 		""";
@@ -599,7 +608,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			public override void Write(Utf8JsonWriter writer, {{data.TypeName}}[] arr, JsonSerializerOptions options) {
 				writer.WriteStartArray();
 				for (int i = 0, len = arr.Length; i < len; ++i) {
-					writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "arr[i].Data()")}};
+					writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "arr[i].Data")}};
 				}
 				writer.WriteEndArray();
 			}
@@ -642,7 +651,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 					if (v is null) {
 						writer.WriteNullValue();
 					} else {
-						writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "v.Value.Data()")}};
+						writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "v.Value.Data")}};
 					}
 
 				}
@@ -680,7 +689,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			public override void Write(Utf8JsonWriter writer, IEnumerable<{{data.TypeName}}> values, JsonSerializerOptions options) {
 				writer.WriteStartArray();
 				foreach (var v in values) {
-					writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "v.Data()")}};
+					writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "v.Data")}};
 				}
 				writer.WriteEndArray();
 			}
@@ -722,7 +731,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 					if (v is null) {
 						writer.WriteNullValue();
 					} else {
-						writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "v.Value.Data()")}};
+						writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "v.Value.Data")}};
 					}
 				}
 				writer.WriteEndArray();
@@ -923,7 +932,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			{{generatedCodeAttr}}
 			public static bool HasData(this {{data.TypeName}} self, {{data.DataTypeName}} data)
-				=> self.Data() == data;
+				=> self.Data == data;
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			{{generatedCodeAttr}}

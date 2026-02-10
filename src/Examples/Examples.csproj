@@ -29,6 +29,8 @@
 	<!-- <PropertyGroup Condition="'$(Configuration)'=='' Or '$(Configuration)'=='DEBUG' Or '$(Configuration)'=='Debug'">
 		pdb文件位置和名称
 		<PdbFile>$(Exefile)</PdbFile>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>GeneratedFiles</CompilerGeneratedFilesOutputPath>
 	</PropertyGroup> -->
 
 	<!-- Release配置 -->
