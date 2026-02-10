@@ -4,7 +4,7 @@
   <PropertyGroup>
     <!-- 包信息 -->
 		<PackageId>TaggedEnum</PackageId>
-		<Version>1.13.0</Version>
+		<Version>2.0.0</Version>
 		<!-- <PackageIcon>TaggedEnum</PackageIcon> -->
 		<Title>TaggedEnum</Title>
 		<!-- 项目类型,DotnetTool,Dependency -->
