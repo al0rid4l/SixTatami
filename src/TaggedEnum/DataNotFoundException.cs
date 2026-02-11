@@ -1,3 +1,7 @@
-#pragma warning disable CA1050 // Declare types in namespaces
-public sealed class DataNotFoundException(string msg): Exception(msg);
-#pragma warning restore CA1050 // Declare types in namespaces
+using System.Diagnostics.CodeAnalysis;
+namespace TaggedEnum;
+
+public sealed class DataNotFoundException(string msg): Exception(msg) {
+	[DoesNotReturn]
+	public static T ThrowWithMessage<T>(string message) => throw new DataNotFoundException(message);
+}

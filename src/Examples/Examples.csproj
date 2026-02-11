@@ -18,7 +18,7 @@
 
 		<!-- TODO 在构建时执行代码风格检查,对于依赖了源生成器的项目应该关闭否则导致源生成器生成的代码构建不通过 -->
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <NoWarn>$(NoWarn);CA1050</NoWarn>
+    <NoWarn>$(NoWarn);CA1050,CS0436</NoWarn>
 
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
@@ -115,7 +115,7 @@
 	</ItemGroup> -->
 	<ItemGroup>
 		<!-- <ProjectReference Include="../TaggedEnum/TaggedEnum.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" /> -->
-		<ProjectReference Include="../TaggedEnum/TaggedEnum.csproj" OutputItemType="Analyzer" />
+		<ProjectReference Include="../TaggedEnum/TaggedEnum.csproj" IncludeAssets="analyzers" OutputItemType="Analyzer" />
 		<ProjectReference Include="../Utilities/Utilities.csproj" PrivateAssets="all" />
 		<!-- <ProjectReference Include="../RoslynHelper/RoslynHelper.csproj" /> -->
 		<!-- <ProjectReference Include="../SGDemo/SGDemo.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" /> -->
