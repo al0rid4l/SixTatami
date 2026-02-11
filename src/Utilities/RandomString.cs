@@ -6,15 +6,15 @@ using SixTatami.DataStructures;
 namespace SixTatami.Utilities;
 
 public static class CharsetTypeExtensions {
-	private const string Numbers = "0123456789";
+	private const string Digits = "0123456789";
 
-	private const string AlphabetLower = "abcdefghijklmnopqrstuvwxyz";
+	private const string AlphabetLowercase = "abcdefghijklmnopqrstuvwxyz";
 
-	private const string AlphabetUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private const string AlphabetUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-	private const string HexLower = "abcdef";
+	private const string HexLowercase = "abcdef";
 
-	private const string HexUpper = "ABCDEF";
+	private const string HexUppercase = "ABCDEF";
 
 	private const string Binary = "01";
 
@@ -25,19 +25,19 @@ public static class CharsetTypeExtensions {
 	// NOTE 所有预定义字符串总长度,新增则需要修改此数
 	// private const int TotalCharsetLength = 116;
 
-	private static readonly string[] s_charsetTypeMap = [Numbers, AlphabetLower, AlphabetUpper, HexLower, HexUpper, Octal, Binary, Symbols];
+	private static readonly string[] s_charsetMap = [Digits, AlphabetLowercase, AlphabetUppercase, HexLowercase, HexUppercase, Octal, Binary, Symbols];
 
-	private static int ResolvingPerformanceDegradation(ref StackArray8<string> charsets, CharsetType types) {
-		var charsetCount = 0;
+	private static int ResolveCharsetList(ref StackArray8<string> output, CharsetType types) {
+		var count = 0;
 
-		for (int i = 0; i < s_charsetTypeMap.Length; ++i) {
-			var flag = (byte)types & (1 << i);
-			if ((CharsetType)flag != CharsetType.None) {
-				charsets[charsetCount++] = s_charsetTypeMap[(int)Math.Log2(flag)];
+		for (int i = 0; i < s_charsetMap.Length; ++i) {
+			var mask = (CharsetType)(1 << i);
+			if ((types & mask) == mask) {
+				output[count++] = s_charsetMap[i];
 			}
 		}
 
-		return charsetCount;
+		return count;
 	}
 
 	extension(CharsetType self) {
@@ -53,7 +53,7 @@ public static class CharsetTypeExtensions {
 				];
 
 				Span<char> result = stackalloc char[128];
-				var charsets = new StackArray8<string>();
+				var charsetArray = new StackArray8<string>();
 				var offset = 0;
 
 				for (var i = 0; i < patterns.Length; ++i) {
@@ -65,10 +65,10 @@ public static class CharsetTypeExtensions {
 
 				// 虽然可以TotalCharsetLength,但128内存对齐肯定没问题,免得出些奇怪问题
 				// Span<char> result = stackalloc char[TotalCharsetLength];
-				var charsetCount = ResolvingPerformanceDegradation(ref charsets, self);
+				var charsetCount = ResolveCharsetList(ref charsetArray, self);
 
 				for (int i = 0; i < charsetCount; ++i) {
-					var charset = charsets[i];
+					var charset = charsetArray[i];
 					var len = charset.Length;
 					var span = result.Slice(offset, len);
 					charset.CopyTo(span);
@@ -151,8 +151,7 @@ public static class RandomString {
 			throw new ArgumentException($"Invalid length, {nameof(minLength)}: {minLength}, {nameof(maxLength)}: {maxLength}, {nameof(minLength)} and {nameof(maxLength)} must be greater than 0, and {nameof(maxLength)} must be greater than {nameof(minLength)}.");
 		}
 
-		var rnd = new Random();
-		return GenerateSafe(charset, rnd.Next(minLength, maxLength));
+		return GenerateSafe(charset, Random.Shared.Next(minLength, maxLength));
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -172,18 +171,18 @@ public static class RandomString {
 
 	// 此函数比上面非AOT略快, AOT略慢
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static string GenerateFast(string charset, int length, Random rnd)
-		=> string.Create(length, (charset, rnd), static (span, state) => {
-			var (charset, rnd) = state;
+	private static string GenerateFast(string charset, int length, Random rng)
+		=> string.Create(length, (charset, rng), static (span, state) => {
+			var (charset, rng) = state;
 			var strLen = span.Length;
 			var charsetLen = charset.Length;
 			for (var i = 0; i < strLen; ++i) {
-				span[i] = charset[rnd.Next(charsetLen)];
+				span[i] = charset[rng.Next(charsetLen)];
 			}
 		});
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	public static string GenerateFast(string charset, int length = 10) => GenerateFast(charset, length, new());
+	public static string GenerateFast(string charset, int length = 10) => GenerateFast(charset, length, Random.Shared);
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public static string GenerateFast(CharsetType charset = CharsetType.AlphabetLower, int length = 10) => GenerateFast(charset.Value, length);
@@ -193,10 +192,8 @@ public static class RandomString {
 			throw new ArgumentException($"Invalid length, {nameof(minLength)}: {minLength}, {nameof(maxLength)}: {maxLength}, {nameof(minLength)} and {nameof(maxLength)} must be greater than 0, and {nameof(maxLength)} must be greater than {nameof(minLength)}.");
 		}
 
-		var rnd = new Random();
-		var seed = rnd.NextSingle();
-		int length = (int)Math.Floor((maxLength - minLength) * seed) + minLength;
-		return GenerateFast(charset, length, rnd);
+		int length = Random.Shared.Next(minLength, maxLength);
+		return GenerateFast(charset, length, Random.Shared);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
