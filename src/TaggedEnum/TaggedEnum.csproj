@@ -95,24 +95,21 @@
 		<PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
 	</ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RoslynHelper\RoslynHelper.csproj" PrivateAssets="all" ExcludeAssets="runtime" />
-		<Compile Update="Data.cs" />
-		<EmbeddedResource Include="Data.cs" />
-		<Compile Update="Tagged.cs" />
-		<EmbeddedResource Include="Tagged.cs" />
-		<Compile Update="DataNotFoundException.cs" />
-		<EmbeddedResource Include="DataNotFoundException.cs" />
+		<ProjectReference Include="../RoslynHelper\RoslynHelper.csproj" PrivateAssets="all" ExcludeAssets="runtime" />
+		<EmbeddedResource Include="./Data.cs" LogicalName="TaggedEnum.Data.cs" />
+		<EmbeddedResource Include="./Tagged.cs" LogicalName="TaggedEnum.Tagged.cs" />
+		<EmbeddedResource Include="./DataNotFoundException.cs" LogicalName="TaggedEnum.DataNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="LICENSE" Pack="true" PackagePath="\" />
 		<!-- for icon -->
 		<!-- <None Include="images\icon.png" Pack="true" PackagePath="\"/> -->
-		<None Include="$(PKGZString)\lib\netstandard2.0\ZString.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="$(PKGZString)/lib/netstandard2.0/ZString.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 	<!-- for source generator -->
 	<Target Name="PackProjectAndRefDll" BeforeTargets="_GetPackageFiles">
-		<MSBuild Projects="..\RoslynHelper\RoslynHelper.csproj" Targets="GetTargetPath">
+		<MSBuild Projects="../RoslynHelper\RoslynHelper.csproj" Targets="GetTargetPath">
 			<Output TaskParameter="TargetOutputs" ItemName="_RoslynHelper_OutputItem" />
 		</MSBuild>
 		<ItemGroup>
@@ -122,12 +119,12 @@
 	</Target>
 
 	<Target Name="GetProjectRefDllPath" BeforeTargets="GenerateNuspec;GetTargetPath">
-		<MSBuild Projects="..\RoslynHelper\RoslynHelper.csproj" Targets="GetTargetPath">
+		<MSBuild Projects="../RoslynHelper/RoslynHelper.csproj" Targets="GetTargetPath">
 			<Output TaskParameter="TargetOutputs" ItemName="_RoslynHelper_OutputItem" />
 		</MSBuild>
 		<ItemGroup>
 			<TargetPathWithTargetPlatformMoniker Include="@(_RoslynHelper_OutputItem)" IncludeRuntimeDependency="false" />
-			<TargetPathWithTargetPlatformMoniker Include="$(PKGZString)\lib\netstandard2.0\ZString.dll" IncludeRuntimeDependency="false" />
+			<TargetPathWithTargetPlatformMoniker Include="$(PKGZString)/lib/netstandard2.0/ZString.dll" IncludeRuntimeDependency="false" />
 		</ItemGroup>
 	</Target>
 </Project>
