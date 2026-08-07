@@ -568,7 +568,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var valueToDataConverter = data.AllowDuplicate ? "" : $$"""
 		{{generatedCodeAttr}}
 		public sealed class {{formattedTypeName}}ToDataConverter: JsonConverter<{{data.TypeName}}> {
-			public override {{data.TypeName}} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+			public sealed override {{data.TypeName}} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				{{PrimitiveTypeToDeclareType(data.DataTypeName)}} token = reader.{{PrimitiveTypeToReadJsonType(data.DataTypeName)}};
 				return {{(data.DataTypeName == "string" ? $$"""
 					string.IsNullOrEmpty(token)
@@ -581,7 +581,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				""")}};
 			}
 
-			public override void Write(Utf8JsonWriter writer, {{data.TypeName}} value, JsonSerializerOptions options) {
+			public sealed override void Write(Utf8JsonWriter writer, {{data.TypeName}} value, JsonSerializerOptions options) {
 				writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "value.Data")}};
 			}
 		}
@@ -590,7 +590,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var valueToNameConverter = $$"""
 		{{generatedCodeAttr}}
 		public sealed class {{formattedTypeName}}ToNameConverter: JsonConverter<{{data.TypeName}}> {
-			public override {{data.TypeName}} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+			public sealed override {{data.TypeName}} Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				string? token = reader.GetString();
 				return string.IsNullOrEmpty(token)
 					? JsonException.ThrowWithMessage<{{data.TypeName}}>($"Couldn't convert name \"{token}\" to {{data.TypeName}}.")
@@ -598,7 +598,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 						? result.Value : JsonException.ThrowWithMessage<{{data.TypeName}}>($"Couldn't find \"{token}\" in {{data.TypeName}} name.");
 			}
 
-			public override void Write(Utf8JsonWriter writer, {{data.TypeName}} value, JsonSerializerOptions options) {
+			public sealed override void Write(Utf8JsonWriter writer, {{data.TypeName}} value, JsonSerializerOptions options) {
 				writer.WriteStringValue(value.ToStringFast());
 			}
 		}
@@ -607,7 +607,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var valueToDataArrayConverter = data.AllowDuplicate ? "" : $$"""
 		{{generatedCodeAttr}}
 		public sealed class {{formattedTypeName}}ArrayToDataArrayConverter: JsonConverter<{{data.TypeName}}[]> {
-			public override {{data.TypeName}}[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+			public sealed override {{data.TypeName}}[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				var list = new List<{{data.TypeName}}>();
 				while (reader.Read()) {
 					switch (reader.TokenType) {
@@ -630,7 +630,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				return list.ToArray();
 			}
 
-			public override void Write(Utf8JsonWriter writer, {{data.TypeName}}[] arr, JsonSerializerOptions options) {
+			public sealed override void Write(Utf8JsonWriter writer, {{data.TypeName}}[] arr, JsonSerializerOptions options) {
 				writer.WriteStartArray();
 				for (int i = 0, len = arr.Length; i < len; ++i) {
 					writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "arr[i].Data")}};
@@ -643,7 +643,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var nullableValueToDataArrayConverter = data.AllowDuplicate ? "" : $$"""
 		{{generatedCodeAttr}}
 		public sealed class Nullable{{formattedTypeName}}ArrayToDataArrayConverter: JsonConverter<{{data.TypeName}}?[]> {
-			public override {{data.TypeName}}?[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+			public sealed override {{data.TypeName}}?[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				var list = new List<{{data.TypeName}}?>();
 				while (reader.Read()) {
 					switch (reader.TokenType) {
@@ -669,7 +669,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				return list.ToArray();
 			}
 
-			public override void Write(Utf8JsonWriter writer, {{data.TypeName}}?[] arr, JsonSerializerOptions options) {
+			public sealed override void Write(Utf8JsonWriter writer, {{data.TypeName}}?[] arr, JsonSerializerOptions options) {
 				writer.WriteStartArray();
 				for (int i = 0, len = arr.Length; i < len; ++i) {
 					var v = arr[i];
@@ -688,7 +688,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var valueToDataEnumerableConverter = data.AllowDuplicate ? "" : $$"""
 		{{generatedCodeAttr}}
 		public sealed class {{formattedTypeName}}EnumerableToDataEnumerableConverter: JsonConverter<IEnumerable<{{data.TypeName}}>> {
-			public override IEnumerable<{{data.TypeName}}> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+			public sealed override IEnumerable<{{data.TypeName}}> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				var list = new List<{{data.TypeName}}>();
 				while (reader.Read()) {
 					switch (reader.TokenType) {
@@ -711,7 +711,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				return list.ToArray();
 			}
 
-			public override void Write(Utf8JsonWriter writer, IEnumerable<{{data.TypeName}}> values, JsonSerializerOptions options) {
+			public sealed override void Write(Utf8JsonWriter writer, IEnumerable<{{data.TypeName}}> values, JsonSerializerOptions options) {
 				writer.WriteStartArray();
 				foreach (var v in values) {
 					writer.{{PrimitiveTypeToWriteJsonType(data.DataTypeName, "v.Data")}};
@@ -724,7 +724,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var nullableValueToDataEnumerableConverter = data.AllowDuplicate ? "" : $$"""
 		{{generatedCodeAttr}}
 		public sealed class Nullable{{formattedTypeName}}EnumerableToDataEnumerableConverter: JsonConverter<IEnumerable<{{data.TypeName}}?>> {
-			public override IEnumerable<{{data.TypeName}}?> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+			public sealed override IEnumerable<{{data.TypeName}}?> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				var list = new List<{{data.TypeName}}?>();
 				while (reader.Read()) {
 					switch (reader.TokenType) {
@@ -750,7 +750,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				return list.ToArray();
 			}
 
-			public override void Write(Utf8JsonWriter writer, IEnumerable<{{data.TypeName}}?> values, JsonSerializerOptions options) {
+			public sealed override void Write(Utf8JsonWriter writer, IEnumerable<{{data.TypeName}}?> values, JsonSerializerOptions options) {
 				writer.WriteStartArray();
 				foreach (var v in values) {
 					if (v is null) {
@@ -767,7 +767,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var valueToNameArrayConverter = $$"""
 		{{generatedCodeAttr}}
 		public sealed class {{formattedTypeName}}ArrayToNameArrayConverter: JsonConverter<{{data.TypeName}}[]> {
-			public override {{data.TypeName}}[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+			public sealed override {{data.TypeName}}[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				var list = new List<{{data.TypeName}}>();
 				while (reader.Read()) {
 					switch (reader.TokenType) {
@@ -790,7 +790,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				return list.ToArray();
 			}
 
-			public override void Write(Utf8JsonWriter writer, {{data.TypeName}}[] arr, JsonSerializerOptions options) {
+			public sealed override void Write(Utf8JsonWriter writer, {{data.TypeName}}[] arr, JsonSerializerOptions options) {
 				writer.WriteStartArray();
 				for (int i = 0, len = arr.Length; i < len; ++i) {
 					writer.{{PrimitiveTypeToWriteJsonType("string", "arr[i].ToStringFast()")}};
@@ -803,7 +803,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var nullableValueToNameArrayConverter = $$"""
 		{{generatedCodeAttr}}
 		public sealed class Nullable{{formattedTypeName}}ArrayToNameArrayConverter: JsonConverter<{{data.TypeName}}?[]> {
-			public override {{data.TypeName}}?[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+			public sealed override {{data.TypeName}}?[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				var list = new List<{{data.TypeName}}?>();
 				while (reader.Read()) {
 					switch (reader.TokenType) {
@@ -829,7 +829,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				return list.ToArray();
 			}
 
-			public override void Write(Utf8JsonWriter writer, {{data.TypeName}}?[] arr, JsonSerializerOptions options) {
+			public sealed override void Write(Utf8JsonWriter writer, {{data.TypeName}}?[] arr, JsonSerializerOptions options) {
 				writer.WriteStartArray();
 				for (int i = 0, len = arr.Length; i < len; ++i) {
 					var v = arr[i];
@@ -847,7 +847,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var valueToNameEnumerableConverter = $$"""
 		{{generatedCodeAttr}}
 		public sealed class {{formattedTypeName}}EnumerableToNameEnumerableConverter: JsonConverter<IEnumerable<{{data.TypeName}}>> {
-			public override IEnumerable<{{data.TypeName}}> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+			public sealed override IEnumerable<{{data.TypeName}}> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				var list = new List<{{data.TypeName}}>();
 				while (reader.Read()) {
 					switch (reader.TokenType) {
@@ -870,7 +870,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				return list.ToArray();
 			}
 
-			public override void Write(Utf8JsonWriter writer, IEnumerable<{{data.TypeName}}> values, JsonSerializerOptions options) {
+			public sealed override void Write(Utf8JsonWriter writer, IEnumerable<{{data.TypeName}}> values, JsonSerializerOptions options) {
 				writer.WriteStartArray();
 				foreach (var v in values) {
 					writer.{{PrimitiveTypeToWriteJsonType("string", "v.ToStringFast()")}};
@@ -883,7 +883,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		var nullableValueToNameEnumerableConverter = $$"""
 		{{generatedCodeAttr}}
 		public sealed class Nullable{{formattedTypeName}}EnumerableToNameEnumerableConverter: JsonConverter<IEnumerable<{{data.TypeName}}?>> {
-			public override IEnumerable<{{data.TypeName}}?> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+			public sealed override IEnumerable<{{data.TypeName}}?> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				var list = new List<{{data.TypeName}}?>();
 				while (reader.Read()) {
 					switch (reader.TokenType) {
@@ -909,7 +909,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				return list.ToArray();
 			}
 
-			public override void Write(Utf8JsonWriter writer, IEnumerable<{{data.TypeName}}?> values, JsonSerializerOptions options) {
+			public sealed override void Write(Utf8JsonWriter writer, IEnumerable<{{data.TypeName}}?> values, JsonSerializerOptions options) {
 				writer.WriteStartArray();
 				foreach (var v in values) {
 					if (v is null) {
