@@ -20,6 +20,9 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <NoWarn>$(NoWarn);CA1050,CS0436</NoWarn>
 
+		<!-- lockfile -->
+		<RestoreLockedMode>false</RestoreLockedMode>
+
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
     <TransformOutOfDateOnly>True</TransformOutOfDateOnly> -->
