@@ -1,4 +1,4 @@
-namespace Simulator.DigitalCircuits;
+namespace SixTatami.Extensions;
 
 public static class ArrayExtensions {
 	public static T[] Fill<T>(this T[] arr, Func<T> cb) {
