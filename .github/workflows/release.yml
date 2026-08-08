@@ -44,7 +44,7 @@ jobs:
       # - name: Run lint
       #   run: TODO
       - name: Filter Path
-        uses: dorny/paths-filter@v3
+        uses: dorny/paths-filter@v4
         id: changes
         with:
           base: ${{ steps.vars.outputs.prev_sha }}
@@ -152,7 +152,7 @@ jobs:
   #     # - name: Run lint
   #     #   run: TODO
   #     - name: Filter Path
-  #       uses: dorny/paths-filter@v3
+  #       uses: dorny/paths-filter@v4
   #       id: changes
   #       with:
   #         filters: |

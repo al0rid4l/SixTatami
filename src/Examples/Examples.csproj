@@ -22,6 +22,7 @@
 
 		<!-- lockfile -->
 		<RestoreLockedMode>false</RestoreLockedMode>
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
