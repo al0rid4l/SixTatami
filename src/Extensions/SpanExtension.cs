@@ -1,26 +1,31 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+
 namespace SixTatami.Extensions;
 
-public static class ArrayExtensions {
+public static class SpanExtensions {
 	[DoesNotReturn]
 	private static void ThrowInvalidRange(Range range)
 		=> throw new ArgumentOutOfRangeException($"Range: {range.Start.Value} to {range.End.Value} out of range.");
 
-	public static T[] Fill<T>(this T[] arr, Func<T> cb) {
-		for (int i = 0, length = arr.Length; i < length; ++i) {
-			arr[i] = cb();
+	extension<T>(Span<T> arr) {
+		public Span<T> Fill(Func<T> cb) {
+			for (int i = 0, length = arr.Length; i < length; ++i) {
+				arr[i] = cb();
+			}
+			return arr;
 		}
-		return arr;
+
+		public Span<T> Fill(Func<int, T> cb) {
+			for (int i = 0, length = arr.Length; i < length; ++i) {
+				arr[i] = cb(i);
+			}
+			return arr;
+		}
 	}
 
-	public static T[] Fill<T>(this T[] arr, Func<int, T> cb) {
-		for (int i = 0, length = arr.Length; i < length; ++i) {
-			arr[i] = cb(i);
-		}
-		return arr;
-	}
-
-	extension(int[] arr) {
-		public int[] Fill(Range range) {
+	extension(Span<int> arr) {
+		public Span<int> Fill(Range range) {
 			var start = range.Start.IsFromEnd ? arr.Length - range.Start.Value : range.Start.Value;
 			var end = range.End.IsFromEnd ? arr.Length - range.End.Value : range.End.Value;
 			var length = end - start;
