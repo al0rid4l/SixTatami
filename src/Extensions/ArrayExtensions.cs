@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace SixTatami.Extensions;
 
 public static class ArrayExtensions {
