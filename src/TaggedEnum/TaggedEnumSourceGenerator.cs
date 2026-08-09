@@ -18,7 +18,7 @@ namespace TaggedEnum;
 [Generator(LanguageNames.CSharp)]
 public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 	private static readonly string AttributeSource;
-	private const string AssemblyNamespaceName = "TaggedEnum";
+	private const string AssemblyNamespaceName = nameof(TaggedEnum);
 	private const string TaggedAttrName = $"{AssemblyNamespaceName}.Tagged";
 	private const string TaggedGenericAttrName = $"{AssemblyNamespaceName}.Tagged`1";
 	private const string DataAttrName = $"{AssemblyNamespaceName}.Data";
