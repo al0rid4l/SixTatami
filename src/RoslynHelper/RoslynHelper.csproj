@@ -24,6 +24,10 @@
 		<!-- 在构建时执行代码风格检查,对于依赖了源生成器的项目应该关闭否则导致源生成器生成的代码构建不通过 -->
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
+		<!-- AOT and trim, .NET standard 2.0应当关闭 -->
+ 		<!-- <IsAotCompatible>true</IsAotCompatible>
+		<IsTrimmable>true</IsTrimmable> -->
+
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
     <TransformOutOfDateOnly>True</TransformOutOfDateOnly> -->

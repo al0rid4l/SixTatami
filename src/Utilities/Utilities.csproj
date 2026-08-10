@@ -23,6 +23,10 @@
 		<!-- 在构建时执行代码风格检查,对于依赖了源生成器的项目应该关闭否则导致源生成器生成的代码构建不通过 -->
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
+		<!-- AOT and trim -->
+ 		<IsAotCompatible>true</IsAotCompatible>
+		<IsTrimmable>true</IsTrimmable>
+
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
     <TransformOutOfDateOnly>True</TransformOutOfDateOnly> -->
@@ -44,9 +48,6 @@
     <!-- 生成调试信息 -->
     <!-- pdb文件位置和名称 -->
     <!-- <PdbFile>$(Exefile)</PdbFile> -->
-
- 		<IsAotCompatible>true</IsAotCompatible>
-		<IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <Target Name="MSBuildLog" AfterTargets="Build">

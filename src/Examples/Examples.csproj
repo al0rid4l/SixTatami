@@ -20,10 +20,6 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <NoWarn>$(NoWarn);CA1050,CS0436</NoWarn>
 
-		<!-- lockfile -->
-		<RestoreLockedMode>false</RestoreLockedMode>
-		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
     <TransformOutOfDateOnly>True</TransformOutOfDateOnly> -->
@@ -40,13 +36,15 @@
 	<!-- Release配置 -->
 	<PropertyGroup Condition="'$(Configuration)'=='RELEASE' Or '$(Configuration)'=='Release'">
 		<!-- output target -->
-		<PlatformTarget Condition="'$(Arch)'==''">anycpu</PlatformTarget>
+		<!-- <PlatformTarget Condition="'$(Arch)'==''">anycpu</PlatformTarget>
 		<PlatformTarget Condition="'$(Arch)'=='x64'">x64</PlatformTarget>
 		<PlatformTarget Condition="'$(Arch)'=='x86'">x86</PlatformTarget>
 		<PlatformTarget Condition="'$(Arch)'=='arm'">ARM</PlatformTarget>
-		<PlatformTarget Condition="'$(Arch)'=='arm64'">ARM64</PlatformTarget>
+		<PlatformTarget Condition="'$(Arch)'=='arm64'">ARM64</PlatformTarget> -->
 		<!-- RID -->
 		<RuntimeIdentifier>$(RID)</RuntimeIdentifier>
+		<!-- lockfile下应当指定多个平台,否则本地win CI linux会导致lockfile在debug和release下不一致 -->
+		<!-- 如果单平台则启用上面配置 -->
 		<!-- <RuntimeIdentifiers>win-x64;linux;linux-x64;linux-musl-x64;linux-arm;linux-arm64;linux-musl-arm64;osx-arm64</RuntimeIdentifiers> -->
 
 		<!-- 生成调试信息 -->
@@ -57,16 +55,16 @@
 		<!-- <PublishSelfContained>true</PublishSelfContained>
 		<PublishSingleFile>true</PublishSingleFile> -->
 
-		<!-- R2R -->
-		<PublishReadyToRun>true</PublishReadyToRun>
+		<!-- R2R,和AOT互斥,建议JIT下启用 -->
+		<!-- <PublishReadyToRun>true</PublishReadyToRun>
 		<PublishReadyToRunComposite>true</PublishReadyToRunComposite>
-		<PublishReadyToRunEmitSymbols>true</PublishReadyToRunEmitSymbols>
+		<PublishReadyToRunEmitSymbols>true</PublishReadyToRunEmitSymbols> -->
 
 		<!-- AOT -->
-		<PublishAot>true</PublishAot>
+		<!-- <PublishAot>true</PublishAot>
 		<OptimizationPreference>speed</OptimizationPreference>
 		<EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
-		<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+		<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault> -->
 
 		<!-- JIT & PGO -->
 		<!-- <TieredPGO>true</TieredPGO>
@@ -75,18 +73,18 @@
 		<TieredCompilationQuickJitForLoops>true</TieredCompilationQuickJitForLoops> -->
 
 		<!-- trim -->
-		<PublishTrimmed>true</PublishTrimmed>
+		<!-- <PublishTrimmed>true</PublishTrimmed>
 		<TrimMode>full</TrimMode>
 		<InvariantGlobalization>true</InvariantGlobalization>
 		<EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
 		<EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
 		<StartupHookSupport>false</StartupHookSupport>
-		<EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization>false</EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization>
+		<EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization>false</EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization> -->
 		<!-- symbols -->
-		<TrimmerRemoveSymbols>false</TrimmerRemoveSymbols>
-		<DebuggerSupport>true</DebuggerSupport>
+		<!-- <TrimmerRemoveSymbols>false</TrimmerRemoveSymbols>
+		<DebuggerSupport>true</DebuggerSupport> -->
 		<!-- 裁剪分析 -->
-		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<!-- <EnableTrimAnalyzer>true</EnableTrimAnalyzer> -->
 
 		<!-- runtime -->
 		<!-- GC -->
