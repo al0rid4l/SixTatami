@@ -39,6 +39,7 @@
 
 		<!-- lockfile -->
 		<RestoreLockedMode>true</RestoreLockedMode>
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='' Or '$(Configuration)'=='DEBUG' or '$(Configuration)'=='Debug'">
@@ -81,8 +82,6 @@
 		<Deterministic Condition="$(CI)=='true'">true</Deterministic>
 		<ContinuousIntegrationBuild Condition="$(CI)=='true'">true</ContinuousIntegrationBuild>
 
-		<!-- lockfile, TODO nuget的restore -use-lock-file在DEBUG和RELEASE模式下计算的依赖版本不一致,等修复了再把此项拿到上面去 -->
-		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 	</PropertyGroup>
 
 	<!-- for sourcelink, .NET8以上sdk自带 -->
