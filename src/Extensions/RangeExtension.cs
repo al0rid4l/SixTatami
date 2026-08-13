@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace SixTatami.Extensions;
@@ -18,22 +20,10 @@ public static class RangeExtension {
 	// Range比较小, 不用ref
 	extension(Range range) {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Enumerator GetEnumerator() {
-			ValidateRange(range);
-			return new(range);
-		}
+		public Enumerator GetEnumerator() => new(range);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public IEnumerable<int> AsEnumerable() {
-			ValidateRange(range);
-			return generator(range);
-
-			static IEnumerable<int> generator(Range rg) {
-				for (var i = rg.Start.Value; i< rg.End.Value; ++i) {
-					yield return i;
-				}
-			}
-		}
+		public Enumerator AsEnumerable() => new(range);
 
 		public Range ForEach(Action<int> cb) {
 			ValidateRange(range);
@@ -59,34 +49,53 @@ public static class RangeExtension {
 		}
 	}
 
-	public ref struct Enumerator: IEquatable<Enumerator> {
+	public struct Enumerator: IEquatable<Enumerator>, IEnumerable<int>, IEnumerator<int> {
 		public int Current { get; private set; }
+
+		readonly object IEnumerator.Current => Current;
+
 		private readonly int _End;
 
 		public Enumerator(Range rg) {
-			Current = rg.Start.Value - 1;
+			ValidateRange(rg);
+			checked {
+				Current = rg.Start.Value - 1;
+			}
 			_End = rg.End.Value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool MoveNext() {
-			++Current;
-			return Current < _End;
-		}
-
-		public readonly override string ToString() => "";
-
-		public readonly override int GetHashCode() => Guid.NewGuid().GetHashCode();
+		public bool MoveNext() => ++Current < _End;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public readonly bool Equals(Enumerator obj) => false;
-
-		public readonly override bool Equals(object? obj) => false;
+		public readonly Enumerator GetEnumerator() => this;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool operator ==(Enumerator left, Enumerator right) => false;
+		readonly IEnumerator<int> IEnumerable<int>.GetEnumerator() => this;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool operator !=(Enumerator left, Enumerator right) => true;
+		readonly IEnumerator IEnumerable.GetEnumerator() => this;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public readonly void Reset() => throw new NotImplementedException();
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public readonly void Dispose() {}
+
+		public readonly override string ToString() => Current.ToString(CultureInfo.InvariantCulture);
+
+		public readonly override int GetHashCode() => Current;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public readonly bool Equals(Enumerator obj) => Current == obj.Current;
+
+		public readonly override bool Equals(object? obj) => obj is Enumerator o && o.Current == Current;
+
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool operator ==(Enumerator left, Enumerator right) => left.Equals(right);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool operator !=(Enumerator left, Enumerator right) => !left.Equals(right);
 	}
 }
