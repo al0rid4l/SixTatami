@@ -8,7 +8,7 @@
       "SixTatami.Utilities": {
         "type": "Project",
         "dependencies": {
-          "SixTatami.DataStructures": "[0.1.5, )"
+          "SixTatami.DataStructures": "[0.1.6, )"
         }
       },
       "taggedenum": {
