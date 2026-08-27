@@ -38,6 +38,12 @@
         "resolved": "10.0.10",
         "contentHash": "f5VCIE7AJpd5YvzNTeMGVzQIgyE9tX+AreTYwQF+REbu+DZo/2Ae+jNSwhPEYrVz6RRkd7y8ubXjk6Nn6Ka+Cg=="
       },
+      "T4.BuildTools": {
+        "type": "Direct",
+        "requested": "[3.0.0, )",
+        "resolved": "3.0.0",
+        "contentHash": "BQHKjEAgoGMmZzykqp5iECZPIWHN7oQxbQw/w2D2qxgABg/YjzKm4ASsByCstBTk/eVKWUycmXWLLBTiP9rTng=="
+      },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
         "resolved": "10.0.10",
