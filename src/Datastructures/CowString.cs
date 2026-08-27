@@ -7,7 +7,11 @@ public readonly struct CowString(string owned, int offset, int length): IEquatab
 	private readonly int _offset = offset;
 	private readonly int _length = length;
 
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable CA1707 // Identifiers should not contain underscores
 	public CowString(string _owned): this(_owned, 0, _owned.Length) => _borrowedOrOwned = _owned;
+#pragma warning restore CA1707 // Identifiers should not contain underscores
+#pragma warning restore IDE1006 // Naming Styles
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	public readonly ReadOnlySpan<char> AsSpan() => _borrowedOrOwned.AsSpan(_offset, _length);
