@@ -16,7 +16,7 @@ public static class TaskTupleExtensions {
 <# foreach (var j in Enumerable.Range(1, i)) { #>
 			var t<#= j #> = tuple.t<#= j #>.AsTask();
 <# } #>
-			await Task.WhenAll(t1<# foreach (var j in Enumerable.Range(2, i - 1)) { #>, t<#= j #><# } #>);
+			await Task.WhenAll(t1<# foreach (var j in Enumerable.Range(2, i - 1)) { #>, t<#= j #><# } #>).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -30,7 +30,7 @@ public static class TaskTupleExtensions {
 <# foreach (var j in Enumerable.Range(1, i)) { #>
 			var t<#= j #> = tuple.t<#= j #>.AsTask();
 <# } #>
-			await Task.WhenAll(t1<# foreach (var j in Enumerable.Range(2, i - 1)) { #>, t<#= j #><# } #>);
+			await Task.WhenAll(t1<# foreach (var j in Enumerable.Range(2, i - 1)) { #>, t<#= j #><# } #>).ConfigureAwait(false);
 			return (t1.Result<# foreach (var j in Enumerable.Range(2, i - 1)) { #>, t<#= j #>.Result<# } #>);
 		}
 

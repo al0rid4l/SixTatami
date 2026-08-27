@@ -10,7 +10,7 @@ public static class TaskTupleExtensions {
 		public async Task WhenAll() {
 			var t1 = tuple.t1.AsTask();
 			var t2 = tuple.t2.AsTask();
-			await Task.WhenAll(t1, t2);
+			await Task.WhenAll(t1, t2).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -22,7 +22,7 @@ public static class TaskTupleExtensions {
 			var t1 = tuple.t1.AsTask();
 			var t2 = tuple.t2.AsTask();
 			var t3 = tuple.t3.AsTask();
-			await Task.WhenAll(t1, t2, t3);
+			await Task.WhenAll(t1, t2, t3).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -35,7 +35,7 @@ public static class TaskTupleExtensions {
 			var t2 = tuple.t2.AsTask();
 			var t3 = tuple.t3.AsTask();
 			var t4 = tuple.t4.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4);
+			await Task.WhenAll(t1, t2, t3, t4).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -49,7 +49,7 @@ public static class TaskTupleExtensions {
 			var t3 = tuple.t3.AsTask();
 			var t4 = tuple.t4.AsTask();
 			var t5 = tuple.t5.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5);
+			await Task.WhenAll(t1, t2, t3, t4, t5).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -64,7 +64,7 @@ public static class TaskTupleExtensions {
 			var t4 = tuple.t4.AsTask();
 			var t5 = tuple.t5.AsTask();
 			var t6 = tuple.t6.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -80,7 +80,7 @@ public static class TaskTupleExtensions {
 			var t5 = tuple.t5.AsTask();
 			var t6 = tuple.t6.AsTask();
 			var t7 = tuple.t7.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -97,7 +97,7 @@ public static class TaskTupleExtensions {
 			var t6 = tuple.t6.AsTask();
 			var t7 = tuple.t7.AsTask();
 			var t8 = tuple.t8.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -115,7 +115,7 @@ public static class TaskTupleExtensions {
 			var t7 = tuple.t7.AsTask();
 			var t8 = tuple.t8.AsTask();
 			var t9 = tuple.t9.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -134,7 +134,7 @@ public static class TaskTupleExtensions {
 			var t8 = tuple.t8.AsTask();
 			var t9 = tuple.t9.AsTask();
 			var t10 = tuple.t10.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -154,7 +154,7 @@ public static class TaskTupleExtensions {
 			var t9 = tuple.t9.AsTask();
 			var t10 = tuple.t10.AsTask();
 			var t11 = tuple.t11.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -175,7 +175,7 @@ public static class TaskTupleExtensions {
 			var t10 = tuple.t10.AsTask();
 			var t11 = tuple.t11.AsTask();
 			var t12 = tuple.t12.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -197,7 +197,7 @@ public static class TaskTupleExtensions {
 			var t11 = tuple.t11.AsTask();
 			var t12 = tuple.t12.AsTask();
 			var t13 = tuple.t13.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -220,7 +220,7 @@ public static class TaskTupleExtensions {
 			var t12 = tuple.t12.AsTask();
 			var t13 = tuple.t13.AsTask();
 			var t14 = tuple.t14.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -244,7 +244,7 @@ public static class TaskTupleExtensions {
 			var t13 = tuple.t13.AsTask();
 			var t14 = tuple.t14.AsTask();
 			var t15 = tuple.t15.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -269,7 +269,7 @@ public static class TaskTupleExtensions {
 			var t14 = tuple.t14.AsTask();
 			var t15 = tuple.t15.AsTask();
 			var t16 = tuple.t16.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16).ConfigureAwait(false);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -280,7 +280,7 @@ public static class TaskTupleExtensions {
 		public async Task<(T1, T2)> WhenAll() {
 			var t1 = tuple.t1.AsTask();
 			var t2 = tuple.t2.AsTask();
-			await Task.WhenAll(t1, t2);
+			await Task.WhenAll(t1, t2).ConfigureAwait(false);
 			return (t1.Result, t2.Result);
 		}
 
@@ -293,7 +293,7 @@ public static class TaskTupleExtensions {
 			var t1 = tuple.t1.AsTask();
 			var t2 = tuple.t2.AsTask();
 			var t3 = tuple.t3.AsTask();
-			await Task.WhenAll(t1, t2, t3);
+			await Task.WhenAll(t1, t2, t3).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result);
 		}
 
@@ -307,7 +307,7 @@ public static class TaskTupleExtensions {
 			var t2 = tuple.t2.AsTask();
 			var t3 = tuple.t3.AsTask();
 			var t4 = tuple.t4.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4);
+			await Task.WhenAll(t1, t2, t3, t4).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result);
 		}
 
@@ -322,7 +322,7 @@ public static class TaskTupleExtensions {
 			var t3 = tuple.t3.AsTask();
 			var t4 = tuple.t4.AsTask();
 			var t5 = tuple.t5.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5);
+			await Task.WhenAll(t1, t2, t3, t4, t5).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result);
 		}
 
@@ -338,7 +338,7 @@ public static class TaskTupleExtensions {
 			var t4 = tuple.t4.AsTask();
 			var t5 = tuple.t5.AsTask();
 			var t6 = tuple.t6.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result);
 		}
 
@@ -355,7 +355,7 @@ public static class TaskTupleExtensions {
 			var t5 = tuple.t5.AsTask();
 			var t6 = tuple.t6.AsTask();
 			var t7 = tuple.t7.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result, t7.Result);
 		}
 
@@ -373,7 +373,7 @@ public static class TaskTupleExtensions {
 			var t6 = tuple.t6.AsTask();
 			var t7 = tuple.t7.AsTask();
 			var t8 = tuple.t8.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result, t7.Result, t8.Result);
 		}
 
@@ -392,7 +392,7 @@ public static class TaskTupleExtensions {
 			var t7 = tuple.t7.AsTask();
 			var t8 = tuple.t8.AsTask();
 			var t9 = tuple.t9.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result, t7.Result, t8.Result, t9.Result);
 		}
 
@@ -412,7 +412,7 @@ public static class TaskTupleExtensions {
 			var t8 = tuple.t8.AsTask();
 			var t9 = tuple.t9.AsTask();
 			var t10 = tuple.t10.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result, t7.Result, t8.Result, t9.Result, t10.Result);
 		}
 
@@ -433,7 +433,7 @@ public static class TaskTupleExtensions {
 			var t9 = tuple.t9.AsTask();
 			var t10 = tuple.t10.AsTask();
 			var t11 = tuple.t11.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result, t7.Result, t8.Result, t9.Result, t10.Result, t11.Result);
 		}
 
@@ -455,7 +455,7 @@ public static class TaskTupleExtensions {
 			var t10 = tuple.t10.AsTask();
 			var t11 = tuple.t11.AsTask();
 			var t12 = tuple.t12.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result, t7.Result, t8.Result, t9.Result, t10.Result, t11.Result, t12.Result);
 		}
 
@@ -478,7 +478,7 @@ public static class TaskTupleExtensions {
 			var t11 = tuple.t11.AsTask();
 			var t12 = tuple.t12.AsTask();
 			var t13 = tuple.t13.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result, t7.Result, t8.Result, t9.Result, t10.Result, t11.Result, t12.Result, t13.Result);
 		}
 
@@ -502,7 +502,7 @@ public static class TaskTupleExtensions {
 			var t12 = tuple.t12.AsTask();
 			var t13 = tuple.t13.AsTask();
 			var t14 = tuple.t14.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result, t7.Result, t8.Result, t9.Result, t10.Result, t11.Result, t12.Result, t13.Result, t14.Result);
 		}
 
@@ -527,7 +527,7 @@ public static class TaskTupleExtensions {
 			var t13 = tuple.t13.AsTask();
 			var t14 = tuple.t14.AsTask();
 			var t15 = tuple.t15.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result, t7.Result, t8.Result, t9.Result, t10.Result, t11.Result, t12.Result, t13.Result, t14.Result, t15.Result);
 		}
 
@@ -553,7 +553,7 @@ public static class TaskTupleExtensions {
 			var t14 = tuple.t14.AsTask();
 			var t15 = tuple.t15.AsTask();
 			var t16 = tuple.t16.AsTask();
-			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16);
+			await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16).ConfigureAwait(false);
 			return (t1.Result, t2.Result, t3.Result, t4.Result, t5.Result, t6.Result, t7.Result, t8.Result, t9.Result, t10.Result, t11.Result, t12.Result, t13.Result, t14.Result, t15.Result, t16.Result);
 		}
 
