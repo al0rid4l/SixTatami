@@ -127,4 +127,12 @@
 			<TargetPathWithTargetPlatformMoniker Include="$(PKGZString)/lib/netstandard2.0/ZString.dll" IncludeRuntimeDependency="false" />
 		</ItemGroup>
 	</Target>
+
+	<!-- TODO在build时把依赖项dll拷贝到输出目录方便其他项目收集dll,仅在monorepo下启用 -->
+	<!-- <Target Name="CopySelectedDependenciesToOutput" AfterTargets="Build">
+		<ItemGroup>
+			<ExtraAnalyzerDlls Include="$(PKGZString)\lib\netstandard2.0\ZString.dll" />
+		</ItemGroup>
+		<Copy SourceFiles="@(ExtraAnalyzerDlls)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+	</Target> -->
 </Project>

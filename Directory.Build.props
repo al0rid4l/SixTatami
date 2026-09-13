@@ -3,8 +3,8 @@
 		<!-- 包信息 -->
 		<Authors>al0rid4l</Authors>
 		<Company>com.al0rid4l</Company>
-		<RepositoryUrl>https://github.com/al0rid4l/SixTatami</RepositoryUrl>
-		<PackageProjectUrl>https://github.com/al0rid4l/SixTatami</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/al0rid4l/TODO</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/al0rid4l/TODO</PackageProjectUrl>
 
 		<!-- 启用包验证 -->
 		<EnablePackageValidation>true</EnablePackageValidation>
@@ -64,8 +64,6 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
 
-		<!-- 用于非库项目 -->
-		<!-- <PublishReadyToRunEmitSymbols>true</PublishReadyToRunEmitSymbols> -->
     <!-- 优化 -->
     <Optimize>true</Optimize>
 		<!-- for snupkg -->
@@ -81,7 +79,6 @@
 		<!-- Github Action中默认环境变量CI为true,也可以使用GITHUB_ACTIONS,也默认为true,不过CI更加可移植一些 -->
 		<Deterministic Condition="$(CI)=='true'">true</Deterministic>
 		<ContinuousIntegrationBuild Condition="$(CI)=='true'">true</ContinuousIntegrationBuild>
-
 	</PropertyGroup>
 
 	<!-- for sourcelink, .NET8以上sdk自带 -->

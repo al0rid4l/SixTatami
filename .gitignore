@@ -8,5 +8,6 @@ obj
 
 .vs
 
-BenchmarkDotNet.Artifacts
 GeneratedFiles
+
+BenchmarkDotNet.Artifacts

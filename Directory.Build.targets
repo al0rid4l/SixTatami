@@ -1,0 +1,14 @@
+<Project>
+	<!-- 挂载到 ResolveAssemblyReferences 之前，确保在解析依赖时分析器就已就位 -->
+	<Target Name="_InjectRestFetchSourceGeneratorLocally" BeforeTargets="ResolveAssemblyReferences;CoreCompile">
+		<!-- 筛选出引用了 RestFetch.Core 的项目 -->
+		<ItemGroup>
+			<_CoreRef Include="@(ProjectReference)" Condition="'%(ProjectReference.Filename)' == 'RestFetch.Core'" />
+		</ItemGroup>
+
+		<!-- 匹配到才注入 Analyzer -->
+		<ItemGroup Condition="'@(_CoreRef)' != ''">
+			<Analyzer Include="$(MSBuildThisFileDirectory)src/TODOSourceGenerator/bin/$(Configuration)/netstandard2.0/*.dll" />
+		</ItemGroup>
+	</Target>
+</Project>

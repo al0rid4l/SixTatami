@@ -43,11 +43,11 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			}
 		}
 
-		{{ReadResource(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.Data.cs")}}
+		{{ReadFileFromAssembly(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.Data.cs")}}
 
-		{{ReadResource(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.Tagged.cs")}}
+		{{ReadFileFromAssembly(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.Tagged.cs")}}
 
-		{{ReadResource(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.DataNotFoundException.cs", 3)}}
+		{{ReadFileFromAssembly(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.DataNotFoundException.cs", 3)}}
 		""";
 
 	private const string AssemblyNamespaceName = nameof(TaggedEnum);
@@ -129,15 +129,6 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		}
 	}
 
-	private static string ReadResource(Assembly assembly, string fileName, int skipStartLines = 0) {
-		using var stream = assembly.GetManifestResourceStream(fileName);
-		using var reader = new StreamReader(stream);
-		while (skipStartLines-- != 0) {
-			reader.ReadLine();
-		}
-		return reader.ReadToEnd();
-	}
-
 	private static TargetEnumInfo? TransformEnumPayload(GeneratorAttributeSyntaxContext ctx, CancellationToken cancellationToken) {
 		// if (!Debugger.IsAttached){
 		// 	Debugger.Launch();
@@ -192,20 +183,20 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 
 		if (attr.IsGenericType) {
 			var genericArg = attr.TypeArguments[0];
-			if (genericArg.SpecialType != SpecialType.System_String
-				&& genericArg.SpecialType != SpecialType.System_Char
-				&& genericArg.SpecialType != SpecialType.System_Int16
-				&& genericArg.SpecialType != SpecialType.System_Int32
-				&& genericArg.SpecialType != SpecialType.System_Int64
-				&& genericArg.SpecialType != SpecialType.System_UInt16
-				&& genericArg.SpecialType != SpecialType.System_UInt32
-				&& genericArg.SpecialType != SpecialType.System_UInt64
-				&& genericArg.SpecialType != SpecialType.System_Boolean
-				&& genericArg.SpecialType != SpecialType.System_Byte
-				&& genericArg.SpecialType != SpecialType.System_SByte
-				&& genericArg.SpecialType != SpecialType.System_Single
-				&& genericArg.SpecialType != SpecialType.System_Double
-				&& genericArg.SpecialType != SpecialType.System_Decimal
+			if (genericArg.SpecialType is not SpecialType.System_String
+				and not SpecialType.System_Char
+				and not SpecialType.System_Int16
+				and not SpecialType.System_Int32
+				and not SpecialType.System_Int64
+				and not SpecialType.System_UInt16
+				and not SpecialType.System_UInt32
+				and not SpecialType.System_UInt64
+				and not SpecialType.System_Boolean
+				and not SpecialType.System_Byte
+				and not SpecialType.System_SByte
+				and not SpecialType.System_Single
+				and not SpecialType.System_Double
+				and not SpecialType.System_Decimal
 				) {
 				var location = attrData.ApplicationSyntaxReference?.GetSyntax(cancellationToken)
 					.ChildNodes()
