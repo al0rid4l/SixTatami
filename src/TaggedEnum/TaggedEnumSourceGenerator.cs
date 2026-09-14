@@ -98,7 +98,10 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		// if (!Debugger.IsAttached){
 		// 	Debugger.Launch();
 		// }
-		context.RegisterPostInitializationOutput(static i => i.AddSource($"{AssemblyNamespaceName}Attribute.g.cs", AttributeSource));
+		context.RegisterPostInitializationOutput(static i => {
+			i.AddEmbeddedAttributeDefinition();
+			i.AddSource($"{AssemblyNamespaceName}Attribute.g.cs", AttributeSource);
+		});
 
 		foreach (var taggedAttrName in (Span<string>)[TaggedAttrName, TaggedGenericAttrName]) {
 			var taggedProvider = context.SyntaxProvider.ForAttributeWithMetadataName(taggedAttrName,

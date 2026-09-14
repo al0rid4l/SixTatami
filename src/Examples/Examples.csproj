@@ -26,12 +26,13 @@
 	</PropertyGroup>
 
 	<!-- Debug配置 -->
-	<!-- <PropertyGroup Condition="'$(Configuration)'=='' Or '$(Configuration)'=='DEBUG' Or '$(Configuration)'=='Debug'">
-		pdb文件位置和名称
-		<PdbFile>$(Exefile)</PdbFile>
-		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+	<PropertyGroup Condition="'$(Configuration)'=='' Or '$(Configuration)'=='DEBUG' Or '$(Configuration)'=='Debug'">
+		<!-- pdb文件位置和名称
+		<PdbFile>$(Exefile)</PdbFile> -->
+		<EmitCompilerGeneratedFiles>false</EmitCompilerGeneratedFiles>
 		<CompilerGeneratedFilesOutputPath>GeneratedFiles</CompilerGeneratedFilesOutputPath>
-	</PropertyGroup> -->
+		<UseStaticGeneratedFiles>false</UseStaticGeneratedFiles>
+	</PropertyGroup>
 
 	<!-- Release配置 -->
 	<PropertyGroup Condition="'$(Configuration)'=='RELEASE' Or '$(Configuration)'=='Release'">
@@ -123,4 +124,18 @@
 		<!-- <ProjectReference Include="../SGDemo/SGDemo.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" /> -->
 		<!-- <ProjectReference Include="../TaggedEnum/TaggedEnum.csproj" /> -->
 	</ItemGroup>
+	<Choose>
+		<When Condition="'$(UseStaticGeneratedFiles)' == 'true'">
+			<ItemGroup>
+				<!-- 静态模式：将落盘文件显式加入编译清单 -->
+				<Compile Include="./GeneratedFiles/**/*.cs" />
+			</ItemGroup>
+		</When>
+		<Otherwise>
+			<ItemGroup>
+				<!-- 动态模式：排除落盘文件，防止与内存代码冲突 -->
+				<Compile Remove="./GeneratedFiles/**/*.cs" />
+			</ItemGroup>
+		</Otherwise>
+	</Choose>
 </Project>

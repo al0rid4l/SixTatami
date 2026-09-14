@@ -87,17 +87,18 @@
 		</Compile>
 	</ItemGroup> -->
   <ItemGroup>
-		<PackageReference Include="ZString" Version="2.6.0" GeneratePathProperty="true" PrivateAssets="all" />
+		<PackageReference Include="ZString" GeneratePathProperty="true" PrivateAssets="all" />
 		<!-- dev dependency -->
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" PrivateAssets="all" />
-		<PackageReference Include="IndexRange" Version="1.1.1" PrivateAssets="all" />
-		<PackageReference Include="Nullable" Version="1.3.1" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+		<PackageReference Include="IndexRange" PrivateAssets="all" />
+		<PackageReference Include="Nullable" PrivateAssets="all" />
 	</ItemGroup>
   <ItemGroup>
 		<ProjectReference Include="../RoslynHelper\RoslynHelper.csproj" PrivateAssets="all" ExcludeAssets="runtime" />
-		<EmbeddedResource Include="./Data.cs" LogicalName="TaggedEnum.Data.cs" />
-		<EmbeddedResource Include="./Tagged.cs" LogicalName="TaggedEnum.Tagged.cs" />
+		<Compile Remove="./*Attribute.cs" />
+		<EmbeddedResource Include="./DataAttribute.cs" LogicalName="TaggedEnum.Data.cs" />
+		<EmbeddedResource Include="./TaggedAttribute.cs" LogicalName="TaggedEnum.Tagged.cs" />
 		<EmbeddedResource Include="./DataNotFoundException.cs" LogicalName="TaggedEnum.DataNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
