@@ -97,8 +97,8 @@
   <ItemGroup>
 		<ProjectReference Include="../RoslynHelper\RoslynHelper.csproj" PrivateAssets="all" ExcludeAssets="runtime" />
 		<Compile Remove="./*Attribute.cs" />
-		<EmbeddedResource Include="./DataAttribute.cs" LogicalName="TaggedEnum.Data.cs" />
-		<EmbeddedResource Include="./TaggedAttribute.cs" LogicalName="TaggedEnum.Tagged.cs" />
+		<EmbeddedResource Include="./DataAttribute.cs" LogicalName="TaggedEnum.DataAttribute.cs" />
+		<EmbeddedResource Include="./TaggedAttribute.cs" LogicalName="TaggedEnum.TaggedAttribute.cs" />
 		<EmbeddedResource Include="./DataNotFoundException.cs" LogicalName="TaggedEnum.DataNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
