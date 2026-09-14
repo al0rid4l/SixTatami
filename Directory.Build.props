@@ -28,7 +28,7 @@
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<AnalysisLevel>latest-recommended</AnalysisLevel>
 		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <NoWarn>CA1051,CA1725,CA2211,CA1710,RCS1158,CA1000</NoWarn>
+    <NoWarn>CA1051,CA1725,CA2211,CA1710,RCS1158,CA1000,RS2000,IDE0055,IDE0130,IDE0011,IDE0006,CS1591</NoWarn>
 		<!-- 在构建时执行代码风格检查,对于依赖了源生成器的项目应该关闭否则导致源生成器生成的代码构建不通过 -->
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 

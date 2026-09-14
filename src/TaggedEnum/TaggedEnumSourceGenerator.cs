@@ -51,10 +51,10 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 		""";
 
 	private const string AssemblyNamespaceName = nameof(TaggedEnum);
-	private const string TaggedAttrName = $"{AssemblyNamespaceName}.Tagged";
-	private const string TaggedGenericAttrName = $"{AssemblyNamespaceName}.Tagged`1";
-	private const string DataAttrName = $"{AssemblyNamespaceName}.Data";
-	private const string DataGenericAttrName = $"{AssemblyNamespaceName}.Data`1";
+	private const string TaggedAttrName = $"{AssemblyNamespaceName}.TaggedAttribute";
+	private const string TaggedGenericAttrName = $"{AssemblyNamespaceName}.TaggedAttribute`1";
+	private const string DataAttrName = $"{AssemblyNamespaceName}.DataAttribute";
+	private const string DataGenericAttrName = $"{AssemblyNamespaceName}.DataAttribute`1";
 
 	private static readonly DiagnosticDescriptor Rule0 = new("TAGGED0001",
 		"Multiple attributes are not allowed",
