@@ -103,33 +103,40 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			i.AddSource($"{AssemblyNamespaceName}Attribute.g.cs", AttributeSource);
 		});
 
-		foreach (var taggedAttrName in (Span<string>)[TaggedAttrName, TaggedGenericAttrName]) {
-			var taggedProvider = context.SyntaxProvider.ForAttributeWithMetadataName(taggedAttrName,
-				IsEnum,
-				TransformEnumPayload
-			)
-			.Where(NotNullValueType)
-			.Select(NullableToValueType);
-			var taggedDiagnosticProvider = taggedProvider.Where(static v => v.Diagnostics is not null).Select(static (v, _) => v.Diagnostics!).Collect();
-			var dataProvider = taggedProvider.Where(static v => v.Diagnostics is null).Select(ProcessMembers).Where(static v => v.Members is not null);
-			var dataDiagnosticProvider = dataProvider.Where(static v => v.Members.Any(static m => m.Diagnostics is not null))
-				.SelectMany(static (v, _) => v.Members!).Select(static (v, _) => v.Diagnostics).Collect();
-			var provider = dataProvider.Where(static v => v.Members.All(static m => m.Diagnostics is null));
-			var diagnosticProvider = dataDiagnosticProvider.Combine(taggedDiagnosticProvider)
-				.Select(static (v, _)
-				=> (v.Left.Aggregate(Enumerable.Empty<Diagnostic>(), static (cur, next) => cur.Concat(next ?? [])) ?? [])
-					.Concat(v.Right.Aggregate(Enumerable.Empty<Diagnostic>(), static (cur, next) => cur.Concat(next ?? []))));
+		var taggedProvider = context.SyntaxProvider.ForAttributeWithMetadataName(TaggedAttrName,
+			IsEnum,
+			TransformEnumPayload
+		);
+		var taggedGenericProvider = context.SyntaxProvider.ForAttributeWithMetadataName(TaggedGenericAttrName,
+			IsEnum,
+			TransformEnumPayload
+		);
+		var allProvider = taggedProvider
+		.Collect()
+		.Combine(taggedGenericProvider.Collect())
+		.SelectMany(static (tuple, _) => tuple.Left.Concat(tuple.Right).Distinct())
+		.Where(NotNullValueType)
+		.Select(NullableToValueType);
 
-			context.RegisterSourceOutput(provider, GenerateSource);
-			context.RegisterSourceOutput(diagnosticProvider, static (ctx, data) => {
-				// if (!Debugger.IsAttached){
-				// 	Debugger.Launch();
-				// }
-				foreach (var diagnostic in data) {
-					ctx.ReportDiagnostic(diagnostic);
-				}
-			});
-		}
+		var taggedDiagnosticProvider = allProvider.Where(static v => v.Diagnostics is not null).Select(static (v, _) => v.Diagnostics!).Collect();
+		var dataProvider = allProvider.Where(static v => v.Diagnostics is null).Select(ProcessMembers).Where(static v => v.Members is not null);
+		var dataDiagnosticProvider = dataProvider.Where(static v => v.Members.Any(static m => m.Diagnostics is not null))
+			.SelectMany(static (v, _) => v.Members!).Select(static (v, _) => v.Diagnostics).Collect();
+		var provider = dataProvider.Where(static v => v.Members.All(static m => m.Diagnostics is null));
+		var diagnosticProvider = dataDiagnosticProvider.Combine(taggedDiagnosticProvider)
+			.Select(static (v, _)
+			=> (v.Left.Aggregate(Enumerable.Empty<Diagnostic>(), static (cur, next) => cur.Concat(next ?? [])) ?? [])
+				.Concat(v.Right.Aggregate(Enumerable.Empty<Diagnostic>(), static (cur, next) => cur.Concat(next ?? []))));
+
+		context.RegisterSourceOutput(provider, GenerateSource);
+		context.RegisterSourceOutput(diagnosticProvider, static (ctx, data) => {
+			// if (!Debugger.IsAttached){
+			// 	Debugger.Launch();
+			// }
+			foreach (var diagnostic in data) {
+				ctx.ReportDiagnostic(diagnostic);
+			}
+		});
 	}
 
 	private static TargetEnumInfo? TransformEnumPayload(GeneratorAttributeSyntaxContext ctx, CancellationToken cancellationToken) {
