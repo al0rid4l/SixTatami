@@ -43,9 +43,9 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			}
 		}
 
-		{{ReadFileFromAssembly(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.Data.cs")}}
+		{{ReadFileFromAssembly(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.DataAttribute.cs")}}
 
-		{{ReadFileFromAssembly(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.Tagged.cs")}}
+		{{ReadFileFromAssembly(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.TaggedAttribute.cs")}}
 
 		{{ReadFileFromAssembly(typeof(TaggedEnumSourceGenerator).Assembly, $"{AssemblyNamespaceName}.DataNotFoundException.cs", 3)}}
 		""";
