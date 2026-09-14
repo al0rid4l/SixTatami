@@ -4,7 +4,7 @@
   <PropertyGroup>
     <!-- 包信息 -->
 		<PackageId>TaggedEnum</PackageId>
-		<Version>2.0.8</Version>
+		<Version>2.0.9</Version>
 		<!-- <PackageIcon>TaggedEnum</PackageIcon> -->
 		<Title>TaggedEnum</Title>
 		<!-- 项目类型,DotnetTool,Dependency -->
@@ -47,6 +47,9 @@
     <!-- T4模板 -->
     <!-- <TransformOnBuild>True</TransformOnBuild>
     <TransformOutOfDateOnly>True</TransformOutOfDateOnly> -->
+
+		<!-- 方便VS调试 -->
+		<IsRoslynComponent>true</IsRoslynComponent>
   </PropertyGroup>
 
   <!-- Debug配置 -->

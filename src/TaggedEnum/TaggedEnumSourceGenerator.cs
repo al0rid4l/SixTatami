@@ -479,7 +479,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 			public static string ToStringFast(this {{data.TypeName}} self)
 			=> self switch {
 			{{valueNameConditionalBranches}}
-				_ => UnreachableException.ThrowWithMessage<string>("Never reach here.")
+				_ => UnreachableException.ThrowWithMessage<string>($"Invalid type cast. {self.ToString()} is not {{data.TypeName}}.")
 			};
 		""" : $$"""
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -488,7 +488,7 @@ public sealed class TaggedEnumSourceGenerator: IIncrementalGenerator {
 				if (ValueNameMap.TryGetValue(self, out var name)) {
 					return name;
 				} else {
-					return UnreachableException.ThrowWithMessage<string>("Never reach here.");
+					return UnreachableException.ThrowWithMessage<string>($"Invalid type cast. {self.ToString()} is not {{data.TypeName}}.");
 				}
 			}
 		""";
