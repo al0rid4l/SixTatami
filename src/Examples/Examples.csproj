@@ -30,7 +30,6 @@
 		<!-- pdb文件位置和名称
 		<PdbFile>$(Exefile)</PdbFile> -->
 		<EmitCompilerGeneratedFiles>false</EmitCompilerGeneratedFiles>
-		<CompilerGeneratedFilesOutputPath>GeneratedFiles</CompilerGeneratedFilesOutputPath>
 		<UseStaticGeneratedFiles>false</UseStaticGeneratedFiles>
 	</PropertyGroup>
 
@@ -128,13 +127,13 @@
 		<When Condition="'$(UseStaticGeneratedFiles)' == 'true'">
 			<ItemGroup>
 				<!-- 静态模式：将落盘文件显式加入编译清单 -->
-				<Compile Include="./GeneratedFiles/**/*.cs" />
+				<Compile Include="./$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
 			</ItemGroup>
 		</When>
 		<Otherwise>
 			<ItemGroup>
 				<!-- 动态模式：排除落盘文件，防止与内存代码冲突 -->
-				<Compile Remove="./GeneratedFiles/**/*.cs" />
+				<Compile Remove="./$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
 			</ItemGroup>
 		</Otherwise>
 	</Choose>

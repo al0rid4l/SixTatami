@@ -10,7 +10,7 @@
 		<EnablePackageValidation>true</EnablePackageValidation>
 
 		<!-- output target -->
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
 
     <!-- 预处理器符号定义 -->
     <DefineConstants Condition="$(RuntimeIdentifier.Contains('win'))">WINDOWS</DefineConstants>
@@ -40,6 +40,9 @@
 		<!-- lockfile -->
 		<RestoreLockedMode>true</RestoreLockedMode>
 		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+
+		<!-- 源生成器生成文件目录 -->
+		<CompilerGeneratedFilesOutputPath>GeneratedFiles</CompilerGeneratedFilesOutputPath>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='' Or '$(Configuration)'=='DEBUG' or '$(Configuration)'=='Debug'">

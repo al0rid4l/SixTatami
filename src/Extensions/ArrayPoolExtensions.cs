@@ -35,21 +35,14 @@ public static class ArrayPoolExtensions {
 	}
 }
 
-public readonly struct SharedObject<T>(ArrayPool<T> shared, int minimumLength): IDisposable, IEquatable<SharedObject<T>> {
+public sealed class SharedObject<T>(ArrayPool<T> shared, int minimumLength): IDisposable {
+	private int _disposed;
 	public readonly T[] Value = shared.Rent(minimumLength);
 
-	public readonly override string ToString() => "";
-
-	public readonly bool Equals(SharedObject<T> obj) => false;
-
-	public override bool Equals(object? obj) => false;
-
-	public readonly void Dispose() => shared.Return(Value);
-
-	public static bool operator ==(SharedObject<T> left, SharedObject<T> right) => left.Value == right.Value;
-
-	public static bool operator !=(SharedObject<T> left, SharedObject<T> right) => left.Value != right.Value;
-
-	public override int GetHashCode() => Value.GetHashCode();
-
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public void Dispose() {
+		if (Interlocked.CompareExchange(ref _disposed, 1, 0) == 0) {
+			shared.Return(Value);
+		}
+	}
 }
